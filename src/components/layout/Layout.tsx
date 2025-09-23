@@ -31,10 +31,10 @@ export function Layout({ children }: LayoutProps) {
   const showTabBar = isLoaded && isAuthenticated && !noTabBarPages.includes(pathname);
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen" style={{backgroundColor: '#F4F4F0', color: '#0B0B0B'}}>
       <Header />
 
-      <div className="flex">
+      <div className="flex" style={{backgroundColor: '#F4F4F0'}}>
         {showSidebar && <Sidebar />}
 
         <main
@@ -43,6 +43,7 @@ export function Layout({ children }: LayoutProps) {
             ${showSidebar ? 'lg:ml-64' : ''}
             ${showTabBar ? 'pb-16 lg:pb-0' : ''}
           `}
+          style={{backgroundColor: '#F4F4F0', color: '#0B0B0B'}}
         >
           {children}
         </main>

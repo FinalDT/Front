@@ -1,0 +1,440 @@
+STUDIYA 수학 튜터 MVP - UI/UX 디자인 가이드 (AI 참조용)
+
+=== DESIGN PHILOSOPHY ===
+Style: Neo-Brutalism with Soft Touches
+Concept: "Cute × Neo-Brutal" - 귀여움과 투박함의 조화
+Target: 중학생 (12-15세) + 학부모
+Device Priority: Tablet First (iPad), Desktop Secondary, Mobile Support
+
+=== CORE DESIGN PRINCIPLES ===
+
+1. VISUAL HIERARCHY:
+   - Bold Typography (600-800 weight)
+   - Strong Borders (3-4px solid)
+   - Hard Shadows (no blur, offset only)
+   - High Contrast Colors
+
+2. ACCESSIBILITY FIRST:
+   - Text Contrast: AA 4.5:1 minimum
+   - Touch Targets: 44px+ minimum
+   - Keyboard Navigation: Full support
+   - Focus Indicators: 3-4px thick outlines
+
+3. EMOTIONAL DESIGN:
+   - Friendly but Honest
+   - Encouraging but Direct
+   - Playful but Professional
+   - Trustworthy but Approachable
+
+=== COLOR SYSTEM ===
+
+PRIMARY_PALETTE:
+Background: #F4F4F0 (Warm Beige) - 따뜻하고 집중하기 좋은 베이지
+Text: #0B0B0B (Near Black) - 가독성 최적화된 잉크색
+Accent: #FF90E8 (Pink) - 중요한 요소만 강조하는 핑크
+Accent Light: #FFB3F0 (Light Pink) - hover, 보조 강조용
+
+SECONDARY_PALETTE:
+Border: #D4D4D1 (Soft Gray) - 부드러운 회색 보더
+Border Light: #E8E8E5 (Lighter Gray) - 더 연한 구분선
+Soft: #C7F2E3 (Mint) - 성공, 긍정적 요소
+Soft Light: #E5F9F3 (Light Mint) - 배지, 배경 강조
+
+STATUS_COLORS:
+Success: #4ECDC4 (Turquoise) - 정답, 성공 피드백
+Warning: #FFD700 (Gold) - 주의, 경고
+Error: #FF6B6B (Coral Red) - 오답, 에러
+Info: #90E8FF (Sky Blue) - 정보, 도움말
+
+COLOR_USAGE_RULES:
+1. Pink (Accent): Primary buttons, Selected states, Active navigation, Progress fills
+2. Light Pink: Hover effects, Secondary emphasis, Gentle highlights
+3. Gray Borders: General card borders, Input outlines, Dividers
+4. Beige Background: Main background, Card backgrounds, Neutral areas
+5. Status Colors: Only for feedback, alerts, and state indication
+
+=== TYPOGRAPHY SYSTEM ===
+
+FONT_FAMILY:
+Primary: Inter (system fallback to sans-serif)
+Mono: JetBrains Mono (for code/JSON display)
+Style: Geometric Sans-serif with strong weights
+
+SCALE_DESKTOP:
+H1: 64px/72px line-height, 800 weight - Hero titles, Main headings
+H2: 48px/56px line-height, 700 weight - Section titles, Page headings  
+H3: 32px/40px line-height, 700 weight - Card titles, Subsections
+H4: 24px/32px line-height, 600 weight - Component titles
+Body: 16px/24px line-height, 400 weight - Main content, Descriptions
+Small: 14px/20px line-height, 500 weight - Labels, Metadata
+Caption: 12px/16px line-height, 400 weight - Fine print, Hints
+
+SCALE_MOBILE:
+H1: 40px/48px line-height, 800 weight
+H2: 28px/36px line-height, 700 weight
+H3: 22px/30px line-height, 700 weight
+H4: 18px/26px line-height, 600 weight
+Body: 15px/22px line-height, 400 weight
+Small: 14px/20px line-height, 500 weight
+Caption: 12px/16px line-height, 400 weight
+
+TYPOGRAPHY_RULES:
+- Letter Spacing: -1% for headings, 0% for body
+- Line Height: Generous spacing for readability
+- Weight Contrast: Bold headings (700-800) vs Normal body (400-500)
+- Color Contrast: Always AA compliant (4.5:1 minimum)
+
+=== LAYOUT SYSTEM ===
+
+GRID_SYSTEM:
+Base Unit: 8px (consistent spacing scale)
+Container Max: 1400px desktop, full-width mobile
+Gutters: 24px desktop, 16px mobile
+Columns: 12-column grid, flexible breakdowns
+
+SPACING_SCALE:
+xs: 4px   - Fine adjustments, icon gaps
+sm: 8px   - Element spacing, padding
+md: 12px  - Card padding, margins
+lg: 16px  - Section spacing
+xl: 24px  - Component separation
+2xl: 32px - Major sections
+3xl: 48px - Page sections
+4xl: 64px - Hero spacing
+
+BREAKPOINTS:
+Mobile: <768px (TabBar navigation)
+Tablet: 768px-1023px (Primary target)
+Desktop: ≥1024px (Sidebar navigation)
+
+RESPONSIVE_RULES:
+- Mobile First approach
+- Touch targets 44px+ on mobile
+- Reduced padding/margins on mobile
+- Stack layouts vertically on mobile
+- Prioritize content over navigation on small screens
+
+=== COMPONENT DESIGN PATTERNS ===
+
+BRUTAL_CARD_SYSTEM:
+Base Structure:
+- Border: 3px solid (color varies by importance)
+- Border Radius: 20px (lg) for most cards
+- Box Shadow: 0 6px 0 rgba(11,11,11,1) - hard offset shadow
+- Padding: 24-32px internal spacing
+- Background: Usually bg color or white
+
+Variations:
+- Hero Cards: 28px radius (xl), accent background
+- Small Cards: 16px radius (md), minimal padding
+- Interactive Cards: Hover lifts (-2px translateY)
+
+BUTTON_SYSTEM:
+Primary Button:
+- Background: var(--color-accent) #FF90E8
+- Border: 3px solid var(--color-accent)
+- Text: var(--color-ink) #0B0B0B
+- Radius: 20px
+- Height: 48px (lg), 40px (md), 32px (sm)
+- Shadow: 0 6px 0 rgba(255,144,232,0.3)
+- Hover: Lighter background + lift effect
+
+Secondary Button:
+- Background: transparent
+- Border: 3px solid var(--color-border) #D4D4D1
+- Text: var(--color-ink)
+- Hover: Light pink background + accent border
+
+States:
+- Hover: translateY(-2px) + shadow increase
+- Active: translateY(2px) + shadow decrease
+- Disabled: 60% opacity + cursor not-allowed
+- Focus: 3px outline for keyboard navigation
+
+INPUT_SYSTEM:
+Base Style:
+- Border: 3px solid var(--color-border)
+- Radius: 20px
+- Padding: 12px 16px
+- Font: 16px to prevent zoom on iOS
+- Background: white or bg color
+
+States:
+- Focus: Accent color border + outline ring
+- Error: Red border + helper text
+- Success: Green border + checkmark
+- Disabled: Grayed out + reduced opacity
+
+BADGE_SYSTEM:
+Style: Pill-shaped (fully rounded)
+Border: 2px solid var(--color-border-light)
+Background: var(--color-soft-light)
+Padding: 4px 12px
+Font: 12px, 700 weight
+
+Variants:
+- Status badges: Use status colors
+- Count badges: Minimal, accent color
+- Category badges: Soft background colors
+
+=== ANIMATION & INTERACTION PATTERNS ===
+
+MOTION_PRINCIPLES:
+Duration: Fast and snappy
+- Micro: 120ms (hover, focus)
+- Standard: 150ms (transitions)
+- Complex: 220ms (page transitions)
+Easing: ease-out for natural feel
+
+HOVER_EFFECTS:
+Cards: translateY(-2px) + shadow increase
+Buttons: translateY(-2px) + color change
+Links: Color transition only
+Images: Subtle scale (1.02x)
+
+FOCUS_STATES:
+All interactive elements: 3px accent color outline
+Offset: 2px from element
+Never remove focus indicators
+High contrast for accessibility
+
+FEEDBACK_ANIMATIONS:
+Correct Answer: Scale bounce (1.0 → 1.1 → 1.0) + green flash
+Wrong Answer: Shake effect (horizontal vibration) + red flash
+Loading: Gentle pulse or skeleton placeholder
+Success: Subtle scale + checkmark appear
+Error: Shake + error color
+
+PAGE_TRANSITIONS (Framer Motion):
+Enter: { opacity: 0, x: 100, scale: 0.9, rotateY: 15 }
+Center: { opacity: 1, x: 0, scale: 1, rotateY: 0 }
+Exit: { opacity: 0, x: -100, scale: 0.9, rotateY: -15 }
+Duration: 600ms with custom easing
+
+REDUCED_MOTION:
+Always respect prefers-reduced-motion
+Fallback to instant transitions or simple opacity changes
+Maintain functionality without motion
+
+=== SPECIFIC UI PATTERNS ===
+
+QUIZ_INTERFACE:
+Question Card:
+- Large rounded card (28px radius)
+- Center-aligned text
+- Type badge in top corner
+- Generous padding (32px)
+
+Answer Options:
+- Individual cards with 20px radius
+- Letter labels (A, B, C, D) in circles
+- Hover: Light background + lift effect
+- Selected: Accent border + background
+- Correct: Green background + checkmark
+- Wrong: Red background + X mark
+
+Timer Component:
+- Full-width progress bar
+- Color changes: Blue → Orange → Red
+- Smooth animations with Framer Motion
+- Time remaining clearly displayed
+
+CHAT_INTERFACE:
+Message Bubbles:
+- Rounded rectangles (16px radius)
+- User (right): Accent background
+- AI (left): White/bg background
+- 3px borders with hard shadows
+- Tail indicators for speech direction
+
+Typing Indicator:
+- Three animated dots
+- Subtle pulse animation
+- Same styling as AI messages
+
+NAVIGATION_PATTERNS:
+Header:
+- Sticky positioning
+- Clear active states (accent underline)
+- Logo on left, nav center/right
+- Mobile: Hamburger → slide menu
+
+Sidebar (Desktop):
+- Fixed left position
+- Icon + label format
+- Clear active states
+- Collapsible on smaller screens
+
+TabBar (Mobile):
+- Fixed bottom position
+- 4-5 main sections
+- Icon + label below
+- Active state highlighting
+
+=== RESPONSIVE DESIGN RULES ===
+
+MOBILE_OPTIMIZATIONS:
+- Single column layouts
+- Larger touch targets (minimum 44px)
+- Reduced padding/margins
+- Simplified navigation
+- Thumb-friendly button placement
+- Prevent zoom on input focus
+
+TABLET_OPTIMIZATIONS (Primary Target):
+- Optimal for quiz taking
+- Comfortable reading distances
+- Easy thumb navigation
+- Full-bleed hero sections
+- Balanced content density
+
+DESKTOP_ENHANCEMENTS:
+- Sidebar navigation
+- Hover states more prominent
+- Keyboard shortcuts
+- Multi-column layouts where appropriate
+- Mouse-optimized interactions
+
+=== ACCESSIBILITY REQUIREMENTS ===
+
+COLOR_ACCESSIBILITY:
+- Never rely on color alone for information
+- Always pair with icons or text
+- AA contrast minimum (4.5:1 for normal text)
+- AAA preferred where possible (7:1)
+
+KEYBOARD_NAVIGATION:
+- All interactive elements focusable
+- Logical tab order
+- Clear focus indicators
+- Escape key dismisses modals
+- Enter/Space activates buttons
+
+SCREEN_READER_SUPPORT:
+- Semantic HTML structure
+- ARIA labels for complex interactions
+- Live regions for dynamic content
+- Alt text for all images
+- Form labels properly associated
+
+MOTION_SENSITIVITY:
+- Respect prefers-reduced-motion
+- Provide alternatives to motion-based feedback
+- No flashing or strobing effects
+- Smooth, predictable animations only
+
+=== CONTENT STRATEGY ===
+
+TONE_OF_VOICE:
+- Encouraging but honest
+- Simple, direct language
+- Age-appropriate for middle schoolers
+- Positive reinforcement focused
+- Clear instructions and feedback
+
+COPY_PATTERNS:
+Buttons: Action verbs ("시작하기", "확인하기", "저장하기")
+Errors: Helpful, not blaming ("다시 시도해보세요")
+Success: Celebratory but not overwhelming ("잘했어요! ✨")
+Navigation: Clear, predictable labels
+Help Text: Concise, contextual guidance
+
+MICROCOPY_GUIDELINES:
+- Keep button text under 3 words
+- Use consistent terminology throughout
+- Provide clear expectations
+- Offer helpful error messages
+- Celebrate user achievements
+
+=== ICON SYSTEM ===
+
+STYLE_GUIDELINES:
+- 2px stroke weight
+- Rounded line caps
+- Minimal fill usage
+- Hand-drawn feel (slight imperfections OK)
+- 24px standard size, 16px small, 32px large
+
+ICON_USAGE:
+- Always pair with text labels
+- Consistent meaning across app
+- Use system icons when possible
+- Custom icons only when necessary
+- Test for recognition and clarity
+
+=== DESIGN SYSTEM MAINTENANCE ===
+
+CONSISTENCY_RULES:
+1. Use design tokens for all values
+2. Document any exceptions or variations
+3. Regular accessibility audits
+4. User testing for usability
+5. Performance impact consideration
+
+DESIGN_TOKENS_STRUCTURE:
+- Colors: Semantic naming (accent, border, success)
+- Spacing: T-shirt sizing (xs, sm, md, lg, xl)
+- Typography: Role-based (headline, body, caption)
+- Shadows: Contextual (card, button, focus)
+- Radius: Size-based (sm, md, lg, xl)
+
+COMPONENT_LIBRARY:
+- Each component has defined states
+- Clear usage guidelines
+- Code and design synchronized
+- Regular review and updates
+- Accessibility checklist for each component
+
+=== PERFORMANCE CONSIDERATIONS ===
+
+OPTIMIZATION_PRIORITIES:
+1. First Contentful Paint (FCP) < 1.5s
+2. Largest Contentful Paint (LCP) < 2.5s
+3. Cumulative Layout Shift (CLS) < 0.1
+4. First Input Delay (FID) < 100ms
+
+IMAGE_OPTIMIZATION:
+- WebP format preferred
+- Proper sizing for different screens
+- Lazy loading for below-fold content
+- Placeholder strategies (skeleton, blur)
+
+ANIMATION_PERFORMANCE:
+- GPU-accelerated properties only (transform, opacity)
+- Avoid layout-triggering animations
+- Use will-change sparingly
+- Provide reduced-motion alternatives
+
+=== TESTING & VALIDATION ===
+
+USABILITY_TESTING:
+- Test with actual target users (middle schoolers)
+- Mobile/tablet device testing
+- Accessibility tool validation
+- Performance monitoring
+- Cross-browser compatibility
+
+DESIGN_VALIDATION:
+- Color contrast checking
+- Touch target size verification
+- Keyboard navigation testing
+- Screen reader compatibility
+- Motion sensitivity testing
+
+=== HANDOFF SPECIFICATIONS ===
+
+DEVELOPER_HANDOFF:
+- Exact color values (hex codes)
+- Precise spacing measurements
+- Animation timing and easing
+- Responsive breakpoint behaviors
+- Accessibility requirements
+
+DESIGN_ASSETS:
+- Component library with all states
+- Icon set in multiple formats
+- Typography scale documentation
+- Color palette with usage rules
+- Animation specifications
+
+=== END OF DESIGN GUIDE ===

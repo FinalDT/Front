@@ -76,7 +76,7 @@ export default function Home() {
               <div className="lg:col-span-4 flex justify-center lg:justify-end">
                 <div className="relative pulse-gentle">
                   {/* Main Brand Character Card */}
-                  <div className="w-72 h-72 md:w-80 md:h-80 brutal-card bg-accent-light flex items-center justify-center transform rotate-2 hover:rotate-0 transition-transform duration-300 overflow-hidden rounded-3xl">
+                  <div className="w-72 h-72 md:w-80 md:h-80 brutal-card bg-accent-light flex items-center justify-center transform rotate-2 hover:rotate-0 transition-transform duration-300 overflow-hidden rounded-4xl">
                     <Image
                       src="/brandcharacter.png"
                       alt="브랜드 캐릭터"
@@ -88,15 +88,15 @@ export default function Home() {
                   </div>
                   
                   {/* Floating Elements */}
-                  <div className="absolute -top-6 -right-6 w-20 h-20 brutal-card bg-soft-light transform -rotate-12 hover:rotate-0 transition-transform duration-300 rounded-2xl">
+                  <div className="absolute -top-6 -right-6 w-20 h-20 brutal-card bg-soft-light transform -rotate-12 hover:rotate-0 transition-transform duration-300 rounded-3xl">
                     <div className="flex items-center justify-center h-full text-[28px]">📚</div>
                   </div>
                   
-                  <div className="absolute -bottom-6 -left-6 w-16 h-16 brutal-card bg-soft-light transform rotate-12 hover:rotate-0 transition-transform duration-300 rounded-2xl">
+                  <div className="absolute -bottom-6 -left-6 w-16 h-16 brutal-card bg-soft-light transform rotate-12 hover:rotate-0 transition-transform duration-300 rounded-3xl">
                     <div className="flex items-center justify-center h-full text-[20px]">✨</div>
                   </div>
                   
-                  <div className="absolute top-8 -left-8 w-12 h-12 brutal-card bg-soft-light transform -rotate-45 hover:rotate-0 transition-transform duration-300 rounded-xl">
+                  <div className="absolute top-8 -left-8 w-12 h-12 brutal-card bg-soft-light transform -rotate-45 hover:rotate-0 transition-transform duration-300 rounded-2xl">
                     <div className="flex items-center justify-center h-full text-[16px]">💡</div>
                   </div>
                   

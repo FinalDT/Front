@@ -277,7 +277,7 @@ export function CuteQuiz({ sessionId }: CuteQuizProps) {
               className="space-y-8"
             >
               {/* Question Card */}
-              <div className="brutal-card p-8 text-center bg-bg rounded-3xl">
+              <div className="brutal-card p-8 text-center bg-bg rounded-4xl">
                 {/* Question Type Badge */}
                 <div className="inline-flex items-center space-x-2 brutal-badge bg-soft-light mb-6 rounded-full">
                   <span className="text-sm">📝</span>
@@ -321,7 +321,7 @@ export function CuteQuiz({ sessionId }: CuteQuizProps) {
                     onClick={() => handleAnswerSelect(index)}
                     disabled={showFeedback || isLoading}
                     className={cn(
-                      "brutal-card p-6 text-left transition-all duration-200 text-[18px] font-medium rounded-2xl",
+                      "brutal-card p-6 text-left transition-all duration-200 text-[18px] font-medium rounded-3xl",
                       selectedAnswer === index && !showFeedback && "bg-accent-light border-accent border-[4px]",
                       showFeedback && index === question.correctAnswer && "bg-success text-white border-success",
                       showFeedback && index === selectedAnswer && index !== question.correctAnswer && "bg-error text-white border-error",
@@ -422,7 +422,7 @@ export function CuteQuiz({ sessionId }: CuteQuizProps) {
               initial={{ scale: 0.8, y: 50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.8, y: 50 }}
-              className="brutal-card bg-bg p-8 m-4 max-w-md text-center space-y-6 relative rounded-3xl"
+              className="brutal-card bg-bg p-8 m-4 max-w-md text-center space-y-6 relative rounded-4xl"
               onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 이벤트 중단
             >
               {/* 닫기 버튼 */}

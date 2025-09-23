@@ -1,6 +1,36 @@
 @import "tailwindcss";
 
-/* Neo-Brutalism Design System */
+/* Global CSS Variables for immediate use */
+:root {
+  /* Core Colors */
+  --color-bg: #F4F4F0;
+  --color-ink: #0B0B0B;
+  --color-border: #D4D4D1;
+  --color-border-light: #E8E8E5;
+  --color-accent: #FF90E8;
+  --color-accent-light: #FFB3F0;
+  --color-accent-dark: #E066D1;
+  --color-soft: #C7F2E3;
+  --color-soft-light: #E5F9F3;
+  --color-success: #4ECDC4;
+  --color-warning: #FFD700;
+  --color-error: #FF6B6B;
+  --color-info: #90E8FF;
+  
+  /* Border Radius - 더 라운드하게 */
+  --border-radius-sm: 16px;
+  --border-radius-md: 24px;
+  --border-radius-lg: 32px;
+  --border-radius-xl: 40px;
+  
+  /* Hard Shadows */
+  --box-shadow-brutal-sm: 0 4px 0 rgba(11, 11, 11, 1);
+  --box-shadow-brutal-md: 0 6px 0 rgba(11, 11, 11, 1);
+  --box-shadow-brutal-lg: 0 8px 0 rgba(11, 11, 11, 1);
+  --box-shadow-brutal-xl: 0 12px 0 rgba(11, 11, 11, 1);
+}
+
+/* Neo-Brutalism Design System for TailwindCSS */
 @theme {
   /* Core Colors */
   --color-bg: #F4F4F0;
@@ -54,10 +84,10 @@
 
   /* Border Radius - 더 둥글게 */
   --border-radius-none: 0;
-  --border-radius-sm: 12px;
-  --border-radius-md: 16px;
-  --border-radius-lg: 20px;
-  --border-radius-xl: 28px;
+  --border-radius-sm: 16px;
+  --border-radius-md: 24px;
+  --border-radius-lg: 32px;
+  --border-radius-xl: 40px;
 
   /* Hard Shadows */
   --box-shadow-brutal-sm: 0 4px 0 rgba(11, 11, 11, 1);
@@ -71,16 +101,12 @@
   --duration-slow: 220ms;
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-bg: #111111;
-    --color-ink: #F5F5F5;
-    --box-shadow-brutal-sm: 0 4px 0 rgba(245, 245, 245, 1);
-    --box-shadow-brutal-md: 0 6px 0 rgba(245, 245, 245, 1);
-    --box-shadow-brutal-lg: 0 8px 0 rgba(245, 245, 245, 1);
-    --box-shadow-brutal-xl: 0 12px 0 rgba(245, 245, 245, 1);
-  }
+/* Force Light Mode - Dark Mode Disabled */
+
+/* Force Light Background - Override any dark mode */
+html, body, #__next, [data-theme="dark"] {
+  background-color: #F4F4F0 !important;
+  color: #0B0B0B !important;
 }
 
 /* Base Styles */
@@ -90,13 +116,14 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #F4F4F0; /* 직접 설정 */
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-base);
+  background-color: #F4F4F0; /* 직접 설정 */
+  color: #0B0B0B; /* 직접 설정 */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
   margin: 0;
@@ -162,7 +189,7 @@ p {
   border: 3px solid var(--color-border);
   background-color: var(--color-bg);
   box-shadow: var(--box-shadow-brutal-md);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xl);
 }
 
 .brutal-card:hover {
@@ -175,7 +202,7 @@ p {
   background-color: var(--color-accent);
   font-weight: 700;
   padding: 12px 24px;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xl);
   box-shadow: var(--box-shadow-brutal-md);
   transition: all 150ms ease-out;
   color: var(--color-ink);
@@ -201,7 +228,7 @@ p {
   background-color: transparent;
   font-weight: 700;
   padding: 12px 24px;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xl);
   box-shadow: var(--box-shadow-brutal-md);
   transition: all 150ms ease-out;
   color: var(--color-ink);
@@ -223,7 +250,7 @@ p {
   border: 3px solid var(--color-border);
   background-color: var(--color-bg);
   padding: 12px 16px;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xl);
   color: var(--color-ink);
 }
 

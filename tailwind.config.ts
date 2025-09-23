@@ -29,6 +29,12 @@ const config: Config = {
         '3': '3px',
         '4': '4px',
       },
+      borderRadius: {
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '40px',
+        '4xl': '48px',
+      },
       boxShadow: {
         'brutal-sm': '0 4px 0 rgba(11, 11, 11, 1)',
         'brutal-md': '0 6px 0 rgba(11, 11, 11, 1)',
