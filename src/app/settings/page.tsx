@@ -191,7 +191,7 @@ export default function SettingsPage() {
                     label="닉네임"
                     value={settings.nickname}
                     onChange={handleInputChange('nickname')}
-                    error={errors.nickname}
+                    {...(errors.nickname && { error: errors.nickname })}
                     helperText="2-10자 사이로 입력해주세요"
                     maxLength={10}
                     aria-describedby="nickname-help"
@@ -205,7 +205,7 @@ export default function SettingsPage() {
                     type="email"
                     value={settings.email}
                     onChange={handleInputChange('email')}
-                    error={errors.email}
+                    {...(errors.email && { error: errors.email })}
                     helperText="알림 수신용 이메일 주소"
                     aria-describedby="email-help"
                   />

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button, Card, Badge, SkeletonCard } from '@/components/ui';
+import { motion } from 'framer-motion';
+import { Button, SkeletonCard } from '@/components/ui';
 import { session, storage } from '@/lib/utils';
 import { mockPersonalContext } from '@/lib/mockData';
 import { cn } from '@/lib/utils';
@@ -126,7 +126,7 @@ export default function DashboardPage() {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 0.5, ease: "easeOut" as const }
     }
   };
 
@@ -358,7 +358,7 @@ export default function DashboardPage() {
 
                 <div className="space-y-4">
                   <p className="text-[14px] text-ink/70 leading-relaxed">
-                    개인화된 컨텍스트를 바탕으로 맞춤형 설명과 연습 문제를 받아보세요.
+                    개인화된 학습기록을 바탕으로 맞춤형 설명과 연습 문제를 받아보세요.
                   </p>
 
                   {/* Quick Question Suggestions */}

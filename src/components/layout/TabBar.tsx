@@ -22,7 +22,7 @@ export function TabBar() {
     },
     {
       href: '/context',
-      label: '컨텍스트',
+      label: '학습기록',
       icon: (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
           <rect x="2" y="3" width="16" height="2" />

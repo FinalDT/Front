@@ -64,7 +64,7 @@ export default function ContextPage() {
         <div className="text-center">
           <div className="text-[48px] mb-4">📊</div>
           <h2 className="text-[24px] font-bold text-ink mb-4">
-            컨텍스트를 불러올 수 없습니다
+            학습기록을 불러올 수 없습니다
           </h2>
           <p className="text-[16px] text-ink opacity-70 mb-8">
             사전평가를 먼저 완료해주세요.
@@ -120,7 +120,7 @@ export default function ContextPage() {
             </div>
             <div>
               <h1 className="text-[32px] md:text-[48px] font-bold text-ink">
-                개인화 컨텍스트
+                개인화 학습기록
               </h1>
               <p className="text-[16px] text-ink opacity-70">
                 최근 6문항 기반 학습 분석
@@ -251,7 +251,7 @@ export default function ContextPage() {
                 <div className="space-y-3">
                   <h3 className="text-[18px] font-bold text-ink">튜터에게 전달</h3>
                   <p className="text-[14px] text-ink opacity-70">
-                    현재 컨텍스트를 AI 튜터에게 전달하여 개인화된 학습 도움을 받으세요.
+                    현재 학습기록을 AI 튜터에게 전달하여 개인화된 학습 도움을 받으세요.
                   </p>
                 </div>
 
@@ -272,7 +272,7 @@ export default function ContextPage() {
             <Card className="h-full">
               <JsonViewer
                 data={contextJson}
-                title="컨텍스트 JSON"
+                title="학습기록 JSON"
               />
             </Card>
           </div>

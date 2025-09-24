@@ -1,0 +1,27 @@
+{
+  "name": "STUDIYA - AI 수학 튜터",
+  "short_name": "STUDIYA",
+  "description": "중학생을 위한 개인화 AI 수학 학습 플랫폼",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F4F0",
+  "theme_color": "#FF90E8",
+  "icons": [
+    {
+      "src": "/icon",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "ko",
+  "dir": "ltr",
+  "orientation": "portrait"
+}

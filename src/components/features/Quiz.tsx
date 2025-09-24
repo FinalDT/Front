@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Card, Modal } from '@/components/ui';
 import { AnimatedQuizTimer } from './AnimatedQuizTimer';
 import { QuizQuestion, mockQuizQuestions } from '@/lib/mockData';
-import { Grade, storage } from '@/lib/utils';
+import { Grade, storage, isValidGrade } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 interface QuizProps {
@@ -32,7 +32,22 @@ export function Quiz({ sessionId }: QuizProps) {
     }
 
     setGrade(session.grade);
-    setQuestions(mockQuizQuestions[session.grade as Grade]);
+    
+    // Validate grade and get questions
+    if (!isValidGrade(session.grade)) {
+      console.error(`Invalid grade: ${session.grade}`);
+      router.push('/try');
+      return;
+    }
+    
+    const questions = mockQuizQuestions[session.grade as Grade];
+    if (!questions) {
+      console.error(`No questions found for grade: ${session.grade}`);
+      router.push('/try');
+      return;
+    }
+    
+    setQuestions(questions);
 
     // Load existing answers if any
     const savedAnswers = storage.get('quizAnswers');

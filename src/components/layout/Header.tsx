@@ -22,13 +22,13 @@ export function Header() {
       role="banner"
       className="h-20 border-b-[3px] border-border bg-bg sticky top-0 z-50 backdrop-blur-sm"
     >
-      <div className="h-full px-5 md:px-24 max-w-7xl mx-auto flex items-center justify-between">
+      <div className="h-full px-4 flex items-center justify-between w-full">
         {/* Logo */}
         <Link
           href="/"
           className="text-[24px] font-bold text-ink hover:text-accent transition-colors duration-150"
         >
-          튜터
+          STUDIYA
         </Link>
 
         {/* Desktop Navigation */}
@@ -49,7 +49,7 @@ export function Header() {
                 홈
               </NavLink>
               <NavLink href="/context" current={pathname}>
-                컨텍스트
+                학습기록
               </NavLink>
               <NavLink href="/tutor" current={pathname}>
                 튜터

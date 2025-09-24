@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Modal } from '@/components/ui';
 import { AnimatedQuizTimer } from './AnimatedQuizTimer';
 import { QuizQuestion, mockQuizQuestions } from '@/lib/mockData';
-import { Grade, storage } from '@/lib/utils';
+import { Grade, storage, isValidGrade } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
 interface BrutalQuizProps {
@@ -169,7 +169,22 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
     }
 
     setGrade(session.grade);
-    setQuestions(mockQuizQuestions[session.grade as Grade]);
+    
+    // Validate grade and get questions
+    if (!isValidGrade(session.grade)) {
+      console.error(`Invalid grade: ${session.grade}`);
+      router.push('/try');
+      return;
+    }
+    
+    const questions = mockQuizQuestions[session.grade as Grade];
+    if (!questions) {
+      console.error(`No questions found for grade: ${session.grade}`);
+      router.push('/try');
+      return;
+    }
+    
+    setQuestions(questions);
 
     // Load existing state
     const savedAnswers = storage.get('quizAnswers');
@@ -380,7 +395,7 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
               initial={{ opacity: 0, x: 100, rotate: 5 }}
               animate={{ opacity: 1, x: 0, rotate: 0 }}
               exit={{ opacity: 0, x: -100, rotate: -5 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.3, ease: "easeOut" as const }}
               className="space-y-8"
             >
               {/* 브루탈 문제 카드 */}

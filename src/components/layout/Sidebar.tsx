@@ -27,7 +27,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
     },
     {
       href: '/context',
-      label: '컨텍스트',
+      label: '학습기록',
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           <rect x="3" y="4" width="18" height="2" />
@@ -78,7 +78,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             label={item.label}
             icon={item.icon}
             isActive={pathname === item.href}
-            onClick={onClose}
+            {...(onClose && { onClick: onClose })}
           />
         ))}
       </nav>
@@ -98,7 +98,7 @@ function SidebarLink({ href, label, icon, isActive, onClick }: SidebarLinkProps)
   return (
     <Link
       href={href}
-      onClick={onClick}
+      {...(onClick && { onClick })}
       className={cn(
         'flex items-center space-x-3 px-4 py-3 rounded-[8px] border-[3px] transition-all duration-150 hover:shadow-[0_4px_0_rgba(0,0,0,1)] hover:-translate-y-0.5',
         isActive

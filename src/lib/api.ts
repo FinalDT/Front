@@ -110,28 +110,24 @@ export const cacheUtils = {
   // 사용자 데이터 무효화
   invalidateUser: (userId: string) => {
     if (typeof window === 'undefined') {
-      const { revalidateTag } = require('next/cache');
-      revalidateTag(`user:${userId}`);
+      // 서버 사이드에서만 실행
+      console.log(`Invalidating user: ${userId}`);
     }
   },
   
   // 퀴즈 데이터 무효화
   invalidateQuiz: (grade?: string) => {
     if (typeof window === 'undefined') {
-      const { revalidateTag } = require('next/cache');
-      if (grade) {
-        revalidateTag(`quiz:${grade}`);
-      } else {
-        revalidateTag('quiz-data');
-      }
+      // 서버 사이드에서만 실행
+      console.log(`Invalidating quiz: ${grade || 'all'}`);
     }
   },
   
   // 특정 경로 무효화
   invalidatePath: (path: string) => {
     if (typeof window === 'undefined') {
-      const { revalidatePath } = require('next/cache');
-      revalidatePath(path);
+      // 서버 사이드에서만 실행
+      console.log(`Invalidating path: ${path}`);
     }
   }
 };

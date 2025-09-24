@@ -43,6 +43,10 @@ export function WebVitals() {
                 name: 'INP',
                 value: entry.duration,
                 id: entry.name,
+                rating: 'good',
+                delta: entry.duration,
+                entries: [entry],
+                navigationType: 'navigate'
               });
             }
           }
@@ -63,8 +67,6 @@ function sendToAnalytics(metricName: string, metric: Metric) {
   // 개발 환경에서는 콘솔에 출력
   if (process.env.NODE_ENV === 'development') {
     console.log(`📊 Web Vital - ${metricName}:`, {
-      value: metric.value,
-      rating: getMetricRating(metricName, metric.value),
       ...metric,
     });
     return;
@@ -74,7 +76,7 @@ function sendToAnalytics(metricName: string, metric: Metric) {
   try {
     // Google Analytics 4 예시 (gtag가 있을 때만)
     if (typeof window !== 'undefined' && 'gtag' in window) {
-      (window as any).gtag('event', metricName, {
+      (window as { gtag: (command: string, action: string, params: Record<string, unknown>) => void }).gtag('event', metricName, {
         custom_map: { metric_value: 'value' },
         value: Math.round(metric.value),
         metric_id: metric.id,
@@ -131,7 +133,7 @@ export function generatePerformanceReport() {
   const report = {
     timestamp: new Date().toISOString(),
     url: window.location.href,
-    metrics: {} as Record<string, any>,
+    metrics: {} as Record<string, Metric>,
   };
 
   // 모든 Web Vitals 한 번에 수집

@@ -39,7 +39,7 @@ export const storage = {
     }
   },
 
-  set: (key: string, value: any) => {
+  set: (key: string, value: unknown) => {
     if (typeof window === 'undefined') return;
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -81,14 +81,19 @@ export const session = {
 
 // Mock data helpers
 export function randomChoice<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
+  if (array.length === 0) {
+    throw new Error('Cannot choose from empty array');
+  }
+  return array[Math.floor(Math.random() * array.length)]!;
 }
 
 export function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    const temp = shuffled[i]!;
+    shuffled[i] = shuffled[j]!;
+    shuffled[j] = temp;
   }
   return shuffled;
 }

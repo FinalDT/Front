@@ -4,10 +4,21 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
-import { Button, Card, Badge, Input } from '@/components/ui';
+import { Button } from '@/components/ui';
 
-// 채팅 컴포넌트들을 동적 로딩
-const ChatBubble = dynamic(() => import('@/components/features').then(mod => ({ default: mod.ChatBubble })), {
+// 채팅 컴포넌트들을 동적 로딩 (안전한 방식)
+const ChatBubble = dynamic(() => 
+  import('@/components/features/ChatBubble')
+    .then(mod => {
+      if (!mod.ChatBubble) {
+        throw new Error('ChatBubble component not found');
+      }
+      return { default: mod.ChatBubble };
+    })
+    .catch(error => {
+      console.error('ChatBubble import failed:', error);
+      return { default: () => <div className="p-4 text-red-500">Chat component failed to load</div> };
+    }), {
   loading: () => (
     <div className="flex items-start space-x-3 animate-pulse">
       <div className="w-10 h-10 bg-gray-300 brutal-card" />
@@ -17,9 +28,21 @@ const ChatBubble = dynamic(() => import('@/components/features').then(mod => ({ 
       </div>
     </div>
   ),
+  ssr: false
 });
 
-const TypingIndicator = dynamic(() => import('@/components/features').then(mod => ({ default: mod.TypingIndicator })), {
+const TypingIndicator = dynamic(() => 
+  import('@/components/features/ChatBubble')
+    .then(mod => {
+      if (!mod.TypingIndicator) {
+        throw new Error('TypingIndicator component not found');
+      }
+      return { default: mod.TypingIndicator };
+    })
+    .catch(error => {
+      console.error('TypingIndicator import failed:', error);
+      return { default: () => <div className="p-4 text-red-500">Typing indicator failed to load</div> };
+    }), {
   loading: () => (
     <div className="flex items-start space-x-3">
       <div className="w-10 h-10 bg-gray-300 brutal-card animate-pulse" />
@@ -32,6 +55,7 @@ const TypingIndicator = dynamic(() => import('@/components/features').then(mod =
       </div>
     </div>
   ),
+  ssr: false
 });
 
 import { session, storage, generateId, delay } from '@/lib/utils';
@@ -90,7 +114,7 @@ export default function TutorPage() {
       setTimeout(() => {
         const welcomeMessage: ChatMessage = {
           id: generateId(),
-          content: "안녕하세요! 저는 여러분의 수학 학습을 도와드리는 AI 튜터입니다. 😊\n\n현재 컨텍스트를 보니 최근 문제들에서 어려움을 겪고 계시는군요. 무엇을 도와드릴까요?",
+          content: "안녕하세요! 저는 여러분의 수학 학습을 도와드리는 AI 튜터입니다. 😊\n\n현재 학습기록을 보니 최근 문제들에서 어려움을 겪고 계시는군요. 무엇을 도와드릴까요?",
           sender: 'tutor',
           timestamp: new Date(),
           actions: [
@@ -120,7 +144,13 @@ export default function TutorPage() {
   }, [messages, isTyping]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+    }, 100);
   };
 
   const handleSendMessage = async () => {
@@ -148,10 +178,10 @@ export default function TutorPage() {
     for (let i = 0; i < tutorResponses.length; i++) {
       const responseMessage: ChatMessage = {
         id: generateId(),
-        content: tutorResponses[i],
+        content: tutorResponses[i] || '',
         sender: 'tutor',
         timestamp: new Date(),
-        actions: i === tutorResponses.length - 1 ? getQuickActions(userMessage.content) : undefined
+        actions: i === tutorResponses.length - 1 ? getQuickActions(userMessage.content) : []
       };
 
       // Add empty message first for streaming effect
@@ -165,7 +195,7 @@ export default function TutorPage() {
       setMessages(prev => 
         prev.map(msg => 
           msg.id === responseMessage.id 
-            ? { ...msg, content: responseMessage.content, actions: responseMessage.actions }
+            ? { ...msg, content: responseMessage.content, actions: responseMessage.actions || [] }
             : msg
         )
       );
@@ -229,14 +259,14 @@ export default function TutorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-bg via-soft/10 to-accent/5 lg:flex">
+    <div className="h-[calc(100vh-80px)] bg-gradient-to-br from-bg via-soft/10 to-accent/5 lg:flex">
       {/* Mobile Layout */}
-      <div className="lg:hidden flex flex-col h-screen">
+      <div className="lg:hidden flex flex-col h-full">
         {/* Mobile Header */}
         <motion.div 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-4 sticky top-0 z-30"
+          className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-3 sticky top-0 z-30 flex-shrink-0"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -282,7 +312,7 @@ export default function TutorPage() {
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="mt-4 brutal-card p-4 bg-gradient-to-r from-soft/30 to-accent/10 overflow-hidden"
+                className="mt-3 brutal-card p-3 bg-gradient-to-r from-soft/30 to-accent/10 overflow-hidden"
               >
                 <div className="flex items-center space-x-2 mb-3">
                   <span className="text-[16px]">📈</span>
@@ -321,7 +351,7 @@ export default function TutorPage() {
         </motion.div>
 
         {/* Mobile Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
           {messages.length === 0 && !isTyping && (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -389,26 +419,26 @@ export default function TutorPage() {
         </div>
 
         {/* Mobile Input */}
-        <motion.div 
+        <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-bg/95 backdrop-blur-sm border-t-[3px] border-ink p-4"
+          className="bg-bg/95 backdrop-blur-sm border-t-[3px] border-ink p-3 flex-shrink-0"
         >
-          <div className="flex space-x-3">
-            <Input
+          <div className="flex gap-2">
+            <input
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="수학 질문을 입력하세요..."
               disabled={isTyping}
-              className="flex-1 brutal-input"
+              className="flex-1 h-12 px-4 py-3 border-[3px] border-ink bg-bg text-[16px] text-ink placeholder:text-ink placeholder:opacity-50 focus:outline-none focus:ring-[3px] focus:ring-accent focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim() || isTyping}
               className={cn(
-                "brutal-button px-4 transition-all duration-200",
+                "brutal-button px-3 transition-all duration-200 flex-shrink-0",
                 inputValue.trim() && !isTyping ? "bg-accent hover:bg-accent-light" : "bg-gray-300 cursor-not-allowed"
               )}
             >
@@ -423,14 +453,14 @@ export default function TutorPage() {
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden lg:flex h-screen w-full">
+      <div className="hidden lg:flex h-full w-full">
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col max-w-4xl">
+        <div className="flex-1 flex flex-col">
           {/* Desktop Header */}
           <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-6"
+            className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-4 flex-shrink-0"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -474,7 +504,7 @@ export default function TutorPage() {
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="mt-6 brutal-card p-6 bg-gradient-to-r from-soft/30 to-accent/10 overflow-hidden"
+                  className="mt-4 brutal-card p-4 bg-gradient-to-r from-soft/30 to-accent/10 overflow-hidden"
                 >
                   <div className="grid grid-cols-4 gap-6 mb-4">
                     <div className="text-center">
@@ -494,7 +524,7 @@ export default function TutorPage() {
                       <div className="text-[12px] font-medium text-ink/70">취약 개념</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-[20px] font-bold text-ink mb-1">{personalContext.grade}</div>
+                      <div className="text-[20px] font-bold text-ink mb-1">중2</div>
                       <div className="text-[12px] font-medium text-ink/70">현재 학년</div>
                     </div>
                   </div>
@@ -515,7 +545,7 @@ export default function TutorPage() {
           </motion.div>
 
           {/* Desktop Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 min-h-0">
             {messages.length === 0 && !isTyping && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -530,7 +560,7 @@ export default function TutorPage() {
                   <h2 className="text-[32px] font-bold text-ink">안녕하세요! 👋</h2>
                   <p className="text-[18px] text-ink/70 max-w-2xl mx-auto leading-relaxed">
                     저는 여러분의 수학 학습을 도와드리는 AI 튜터입니다. 
-                    개인화된 컨텍스트를 바탕으로 정확하고 친절한 답변을 드릴게요!
+                    개인화된 학습기록을 바탕으로 정확하고 친절한 답변을 드릴게요!
                   </p>
                 </div>
                 <div className="space-y-4">
@@ -589,26 +619,26 @@ export default function TutorPage() {
           </div>
 
           {/* Desktop Input */}
-          <motion.div 
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-bg/95 backdrop-blur-sm border-t-[3px] border-ink p-6"
+            className="bg-bg/95 backdrop-blur-sm border-t-[3px] border-ink p-4 flex-shrink-0"
           >
-            <div className="flex space-x-4">
-              <Input
+            <div className="flex gap-3">
+              <input
                 ref={inputRef}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="수학 질문을 입력하세요... (Enter로 전송)"
                 disabled={isTyping}
-                className="flex-1 brutal-input text-[16px] h-14"
+                className="flex-1 h-14 px-4 py-3 border-[3px] border-ink bg-bg text-[16px] text-ink placeholder:text-ink placeholder:opacity-50 focus:outline-none focus:ring-[3px] focus:ring-accent focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
                 className={cn(
-                  "brutal-button h-14 px-8 text-[16px] transition-all duration-200",
+                  "brutal-button h-14 px-6 text-[16px] transition-all duration-200 flex-shrink-0",
                   inputValue.trim() && !isTyping ? "bg-accent hover:bg-accent-light" : "bg-gray-300 cursor-not-allowed"
                 )}
               >
@@ -667,7 +697,7 @@ export default function TutorPage() {
                   <p>• <strong>Enter</strong>: 메시지 전송</p>
                   <p>• <strong>Shift + Enter</strong>: 줄바꿈</p>
                   <p>• 퀵 액션 버튼으로 빠른 질문</p>
-                  <p>• 컨텍스트 정보로 개인화된 답변</p>
+                  <p>• 학습기록 정보로 개인화된 답변</p>
                 </div>
               </div>
             </motion.div>

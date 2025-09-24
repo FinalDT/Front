@@ -8,6 +8,11 @@ export interface QuizQuestion {
   correctAnswer: number;
   concept: string;
   difficulty: 'easy' | 'medium' | 'hard';
+  type?: '객관식' | '주관식' | '서술형';
+  image?: string;
+  hint?: string;
+  isCorrect?: boolean;
+  timestamp?: Date | string;
   explanation?: string;
 }
 
@@ -35,7 +40,8 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
       options: ['-3', '0', '1/2', '5'],
       correctAnswer: 2,
       concept: '정수와 유리수',
-      difficulty: 'easy'
+      difficulty: 'easy',
+      type: '객관식'
     },
     {
       id: '1-2',
@@ -159,9 +165,15 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
 // Mock quiz results generator
 export function generateMockResult(answers: number[], grade: Grade): QuizResult {
   const questions = mockQuizQuestions[grade];
-  const correctAnswers = answers.filter((answer, index) =>
-    answer === questions[index].correctAnswer
-  ).length;
+  
+  if (!questions) {
+    throw new Error(`No questions found for grade: ${grade}`);
+  }
+  
+  const correctAnswers = answers.filter((answer, index) => {
+    const question = questions[index];
+    return question && answer === question.correctAnswer;
+  }).length;
 
   const accuracy = (correctAnswers / questions.length) * 100;
 
@@ -317,22 +329,22 @@ export function generateTutorResponse(userMessage: string): string[] {
   const message = userMessage.toLowerCase();
 
   if (message.includes('안녕') || message.includes('hello') || message.includes('hi')) {
-    return mockTutorResponses.greeting;
+    return mockTutorResponses.greeting || [];
   }
 
   if (message.includes('이차방정식') || message.includes('방정식')) {
-    return mockTutorResponses.이차방정식;
+    return mockTutorResponses.이차방정식 || [];
   }
 
   if (message.includes('함수') || message.includes('기울기')) {
-    return mockTutorResponses.함수;
+    return mockTutorResponses.함수 || [];
   }
 
   if (message.includes('제곱근') || message.includes('√')) {
-    return mockTutorResponses.제곱근;
+    return mockTutorResponses.제곱근 || [];
   }
 
-  return mockTutorResponses.default;
+  return mockTutorResponses.default || [];
 }
 
 // Mock recommended actions

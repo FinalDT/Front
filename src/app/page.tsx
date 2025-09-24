@@ -261,7 +261,7 @@ export default function Home() {
               >
                 {/* Quote Icon */}
                 <div className="absolute top-4 right-4 text-[48px] text-accent/20 transform rotate-12">
-                  "
+                  &ldquo;
                 </div>
                 
                 {/* Rating Stars */}
@@ -273,7 +273,7 @@ export default function Home() {
                 
                 {/* Comment */}
                 <p className="text-[16px] text-ink leading-relaxed mb-6 relative z-10">
-                  "{testimonial.comment}"
+                  &ldquo;{testimonial.comment}&rdquo;
                 </p>
                 
                 {/* Improvement Badge */}

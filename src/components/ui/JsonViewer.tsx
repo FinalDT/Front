@@ -5,7 +5,7 @@ import { Button } from './Button';
 import { cn } from '@/lib/utils';
 
 interface JsonViewerProps {
-  data: any;
+  data: unknown;
   title?: string;
   className?: string;
 }

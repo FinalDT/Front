@@ -78,14 +78,14 @@ export function AnimatedQuizTimer({
       borderColor: colors.border,
       boxShadow: colors.shadow,
       scale: 1,
-      transition: { duration: 0.3, ease: "easeOut" }
+      transition: { duration: 0.3, ease: "easeOut" as const }
     },
     warning: {
       backgroundColor: colors.bg,
       borderColor: colors.border,
       boxShadow: colors.shadow,
       scale: 1.02,
-      transition: { duration: 0.3, ease: "easeOut" }
+      transition: { duration: 0.3, ease: "easeOut" as const }
     },
     critical: {
       backgroundColor: colors.bg,
@@ -93,8 +93,8 @@ export function AnimatedQuizTimer({
       boxShadow: colors.shadow,
       scale: [1.02, 1.05, 1.02],
       transition: { 
-        scale: { duration: 0.6, repeat: Infinity, ease: "easeInOut" },
-        other: { duration: 0.3, ease: "easeOut" }
+        scale: { duration: 0.6, repeat: Infinity, ease: "easeInOut" as const },
+        other: { duration: 0.3, ease: "easeOut" as const }
       }
     }
   };
@@ -102,7 +102,7 @@ export function AnimatedQuizTimer({
   const progressVariants = {
     animate: {
       width: `${progressReverse}%`,
-      transition: { duration: 1, ease: "linear" }
+      transition: { duration: 1, ease: "linear" as const }
     }
   };
 
@@ -116,7 +116,7 @@ export function AnimatedQuizTimer({
       scale: [1, 1.1, 1],
       color: colors.text,
       transition: { 
-        scale: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
+        scale: { duration: 0.8, repeat: Infinity, ease: "easeInOut" as const },
         color: { duration: 0.2 }
       }
     }
@@ -144,7 +144,7 @@ export function AnimatedQuizTimer({
               }}
               transition={{ 
                 backgroundColor: { duration: 0.3 },
-                rotate: { duration: 2, repeat: isRunning ? Infinity : 0, ease: "linear" }
+                rotate: { duration: 2, repeat: isRunning ? Infinity : 0, ease: "linear" as const }
               }}
             />
             <span className="text-[14px] md:text-[16px] font-bold text-ink">
@@ -183,7 +183,7 @@ export function AnimatedQuizTimer({
             transition={{ 
               duration: 0.8, 
               repeat: isWarning ? Infinity : 0,
-              ease: "easeInOut" 
+              ease: "easeInOut" as const
             }}
           >
             <span className="text-[12px] md:text-[14px] font-bold text-ink drop-shadow-sm">
@@ -241,7 +241,7 @@ export function AnimatedQuizTimer({
             <motion.div 
               className="text-[16px] md:text-[18px] font-bold text-red-700 mb-1"
               animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" as const }}
             >
               ⚡ 시간이 얼마 남지 않았습니다!
             </motion.div>

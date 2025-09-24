@@ -3,8 +3,27 @@
 import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
-// BrutalQuiz 컴포넌트를 동적 로딩 (코드 스플리팅)
-const BrutalQuiz = dynamic(() => import('@/components/features/BrutalQuiz').then(mod => ({ default: mod.BrutalQuiz })), {
+// BrutalQuiz 컴포넌트를 동적 로딩 (안전한 방식)
+const BrutalQuiz = dynamic(() => 
+  import('@/components/features/BrutalQuiz')
+    .then(mod => {
+      if (!mod.BrutalQuiz) {
+        throw new Error('BrutalQuiz component not found');
+      }
+      return { default: mod.BrutalQuiz };
+    })
+    .catch(error => {
+      console.error('BrutalQuiz import failed:', error);
+      return { default: () => (
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center space-y-6">
+            <div className="text-8xl">😱</div>
+            <h1 className="text-4xl font-black text-red-500 uppercase">퀴즈 로딩 실패</h1>
+            <p className="text-xl text-black font-bold">페이지를 새로고침해주세요!</p>
+          </div>
+        </div>
+      ) };
+    }), {
   loading: () => (
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center space-y-6">
