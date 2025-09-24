@@ -3,8 +3,9 @@ import { cn } from '@/lib/utils';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  rotation?: 'none' | 'slight' | 'mild' | 'bold';
   isLoading?: boolean;
 }
 
@@ -13,6 +14,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     className,
     variant = 'primary',
     size = 'md',
+    rotation = 'slight',
     isLoading = false,
     children,
     disabled,
@@ -20,38 +22,80 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   }, ref) => {
     const baseStyles = `
       inline-flex items-center justify-center
-      font-medium transition-all duration-150 ease-out
-      border-[3px] border-ink
-      focus:outline-none focus:ring-[3px] focus:ring-accent focus:ring-offset-2
+      font-black uppercase tracking-wide
+      border-4 border-black
+      transition-all duration-75 ease-out
+      cursor-pointer text-center
+      hover:translate-x-1 hover:translate-y-1
+      active:translate-x-2 active:translate-y-2
+      focus:outline-4 focus:outline-[#FF90E8] focus:outline-offset-2
       disabled:opacity-60 disabled:cursor-not-allowed
-      active:translate-y-0.5
+      disabled:hover:translate-x-0 disabled:hover:translate-y-0
+      font-[Arial Black, Helvetica Neue, sans-serif]
     `;
 
     const variants = {
       primary: `
-        bg-accent text-ink
-        shadow-[0_6px_0_rgba(0,0,0,1)]
-        hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,1)]
-        disabled:hover:translate-y-0 disabled:hover:shadow-[0_6px_0_rgba(0,0,0,1)]
+        bg-[#FF90E8] text-black
+        shadow-[6px_6px_0px_0px_#000]
+        hover:shadow-[4px_4px_0px_0px_#000]
+        hover:bg-[#E066D1]
+        active:shadow-[2px_2px_0px_0px_#000]
+        disabled:bg-[#FF90E8] disabled:shadow-[6px_6px_0px_0px_#000]
+      `,
+      secondary: `
+        bg-white text-black
+        shadow-[6px_6px_0px_0px_#000]
+        hover:shadow-[4px_4px_0px_0px_#000]
+        hover:bg-[#FFB3F0] hover:text-black
+        active:shadow-[2px_2px_0px_0px_#000]
+        disabled:bg-white disabled:shadow-[6px_6px_0px_0px_#000]
+      `,
+      danger: `
+        bg-[#FF0000] text-white
+        shadow-[6px_6px_0px_0px_#000]
+        hover:shadow-[4px_4px_0px_0px_#000]
+        hover:bg-[#CC0000]
+        active:shadow-[2px_2px_0px_0px_#000]
+        disabled:bg-[#FF0000] disabled:shadow-[6px_6px_0px_0px_#000]
+      `,
+      success: `
+        bg-[#00FF00] text-black
+        shadow-[6px_6px_0px_0px_#000]
+        hover:shadow-[4px_4px_0px_0px_#000]
+        hover:bg-[#00CC00]
+        active:shadow-[2px_2px_0px_0px_#000]
+        disabled:bg-[#00FF00] disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       outline: `
-        bg-transparent text-ink
-        shadow-[0_6px_0_rgba(0,0,0,1)]
-        hover:-translate-y-0.5 hover:shadow-[0_8px_0_rgba(0,0,0,1)] hover:bg-accent
-        disabled:hover:translate-y-0 disabled:hover:shadow-[0_6px_0_rgba(0,0,0,1)] disabled:hover:bg-transparent
+        bg-white text-black
+        shadow-[6px_6px_0px_0px_#000]
+        hover:shadow-[4px_4px_0px_0px_#000]
+        hover:bg-[#FFB3F0] hover:text-black
+        active:shadow-[2px_2px_0px_0px_#000]
+        disabled:bg-white disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       ghost: `
-        bg-transparent text-ink border-transparent
+        bg-transparent text-black border-transparent
         shadow-none
-        hover:bg-accent hover:border-ink hover:shadow-[0_4px_0_rgba(0,0,0,1)]
+        hover:bg-[#FFB3F0] hover:border-black hover:shadow-[4px_4px_0px_0px_#000]
+        active:shadow-[2px_2px_0px_0px_#000]
         disabled:hover:bg-transparent disabled:hover:border-transparent disabled:hover:shadow-none
       `
     };
 
     const sizes = {
-      sm: 'h-8 px-3 text-[12px] rounded-[8px]',
-      md: 'h-12 px-6 text-[14px] rounded-[12px]',
-      lg: 'h-14 px-8 text-[16px] rounded-[12px]'
+      sm: 'h-10 px-4 text-sm min-w-[80px] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000]',
+      md: 'h-12 px-6 text-base min-w-[120px] shadow-[6px_6px_0px_0px_#000] hover:shadow-[4px_4px_0px_0px_#000]',
+      lg: 'h-14 px-8 text-lg min-w-[140px] shadow-[8px_8px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000]',
+      xl: 'h-16 px-10 text-xl min-w-[160px] shadow-[10px_10px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000]'
+    };
+
+    const rotations = {
+      none: 'rotate-0',
+      slight: 'rotate-1 hover:rotate-0',
+      mild: 'rotate-2 hover:rotate-0',
+      bold: 'rotate-3 hover:rotate-0'
     };
 
     return (
@@ -60,6 +104,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           baseStyles,
           variants[variant],
           sizes[size],
+          rotations[rotation],
           className
         )}
         ref={ref}
@@ -68,25 +113,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && (
-          <svg
-            className="w-4 h-4 mr-2 animate-spin"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
-          </svg>
+          <div className="mr-2 flex space-x-1">
+            <div className="w-2 h-2 bg-current animate-bounce" />
+            <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.1s' }} />
+            <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.2s' }} />
+          </div>
         )}
         {children}
       </button>

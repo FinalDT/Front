@@ -1,51 +1,106 @@
 @import "tailwindcss";
 
-/* Global CSS Variables for immediate use */
+/* BRUTAL NEO-BRUTALISM DESIGN TOKENS */
 :root {
-  /* Core Colors */
-  --color-bg: #F4F4F0;
-  --color-ink: #0B0B0B;
-  --color-border: #D4D4D1;
-  --color-border-light: #E8E8E5;
-  --color-accent: #FF90E8;
-  --color-accent-light: #FFB3F0;
-  --color-accent-dark: #E066D1;
-  --color-soft: #C7F2E3;
-  --color-soft-light: #E5F9F3;
-  --color-success: #4ECDC4;
-  --color-warning: #FFD700;
-  --color-error: #FF6B6B;
-  --color-info: #90E8FF;
+  /* === PRIMARY COLORS === */
+  --brutal-black: #000000;      /* 순수 검정 */
+  --brutal-white: #FFFFFF;      /* 순수 흰색 */
   
-  /* Border Radius - 더 라운드하게 */
-  --border-radius-sm: 16px;
-  --border-radius-md: 24px;
-  --border-radius-lg: 32px;
-  --border-radius-xl: 40px;
+  /* === ACCENT COLORS === */
+  --brutal-yellow: #FFFF00;     /* 네온 옐로우 */
+  --brutal-pink: #FF90E8;       /* 원래 메인 핑크 (부드러운 브루탈) */
+  --brutal-pink-dark: #E066D1;  /* 더 진한 핑크 */
+  --brutal-pink-light: #FFB3F0; /* 연한 핑크 */
+  --brutal-green: #00FF00;      /* 네온 그린 */
+  --brutal-blue: #0066FF;       /* 전기 블루 */
+  --brutal-red: #FF0000;        /* 순수 빨강 */
+  --brutal-orange: #FF6600;     /* 강렬한 오렌지 */
   
-  /* Hard Shadows */
-  --box-shadow-brutal-sm: 0 4px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-md: 0 6px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-lg: 0 8px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-xl: 0 12px 0 rgba(11, 11, 11, 1);
+  /* === LEGACY COLORS (호환성) === */
+  --color-bg: #FFFFFF;          /* 순수 화이트 */
+  --color-ink: #000000;         /* 순수 검정 */
+  --color-border: #000000;      /* 검정 보더 */
+  --color-border-light: #000000;
+  --color-accent: #FF90E8;      /* 원래 메인 핑크 유지 */
+  --color-accent-light: #FFB3F0; /* 연한 핑크 */
+  --color-accent-dark: #E066D1; /* 진한 핑크 */
+  --color-soft: #C7F2E3;        /* 원래 민트색 유지 (부드러운 요소) */
+  --color-soft-light: #E5F9F3;  /* 연한 민트색 */
+  --color-success: #00FF00;     /* 네온 그린 */
+  --color-warning: #FFFF00;     /* 네온 옐로우 */
+  --color-error: #FF0000;       /* 순수 빨강 */
+  --color-info: #0066FF;        /* 전기 블루 */
+  
+  /* === TYPOGRAPHY === */
+  --brutal-font-primary: "Arial Black", "Helvetica Neue", sans-serif;
+  --brutal-font-mono: "Courier New", monospace;
+  --brutal-weight-black: 900;
+  --brutal-weight-bold: 800;
+  --brutal-weight-regular: 700;  /* 일반도 굵게 */
+  
+  /* === BORDERS & SHADOWS === */
+  --brutal-border-thin: 3px solid var(--brutal-black);
+  --brutal-border-thick: 4px solid var(--brutal-black);
+  --brutal-border-mega: 6px solid var(--brutal-black);
+  --brutal-shadow-sm: 4px 4px 0px 0px var(--brutal-black);
+  --brutal-shadow-md: 6px 6px 0px 0px var(--brutal-black);
+  --brutal-shadow-lg: 8px 8px 0px 0px var(--brutal-black);
+  
+  /* === BORDER RADIUS (최소화) === */
+  --brutal-radius-none: 0px;
+  --brutal-radius-sm: 4px;      /* 거의 각짐 */
+  --brutal-radius-md: 6px;      /* 최소 둥글기 */
+  --brutal-radius-lg: 8px;      /* 최대치도 각짐 */
+  
+  /* === LEGACY RADIUS (브루탈로 덮어쓰기) === */
+  --border-radius-sm: 4px;      /* 각지게 변경 */
+  --border-radius-md: 6px;      /* 각지게 변경 */
+  --border-radius-lg: 8px;      /* 각지게 변경 */
+  --border-radius-xl: 8px;      /* 각지게 변경 */
+  
+  /* === SPACING (더 극단적) === */
+  --brutal-space-xs: 4px;
+  --brutal-space-sm: 8px;
+  --brutal-space-md: 16px;
+  --brutal-space-lg: 24px;
+  --brutal-space-xl: 32px;
+  --brutal-space-2xl: 48px;
+  
+  /* === ROTATIONS (의도적 비대칭) === */
+  --brutal-rotate-slight: 1deg;
+  --brutal-rotate-mild: 2deg;
+  --brutal-rotate-bold: 3deg;
+  --brutal-rotate-crazy: 5deg;
+  
+  /* === BRUTAL COMPONENT SPECIFIC === */
+  --brutal-button-height-sm: 40px;
+  --brutal-button-height-md: 48px;
+  --brutal-button-height-lg: 60px;
+  --brutal-button-height-xl: 72px;
+  
+  /* === LEGACY SHADOWS (브루탈로 업데이트) === */
+  --box-shadow-brutal-sm: 4px 4px 0px 0px var(--brutal-black);
+  --box-shadow-brutal-md: 6px 6px 0px 0px var(--brutal-black);
+  --box-shadow-brutal-lg: 8px 8px 0px 0px var(--brutal-black);
+  --box-shadow-brutal-xl: 12px 12px 0px 0px var(--brutal-black);
 }
 
-/* Neo-Brutalism Design System for TailwindCSS */
+/* BRUTAL NEO-BRUTALISM TAILWIND THEME */
 @theme {
-  /* Core Colors */
-  --color-bg: #F4F4F0;
-  --color-ink: #0B0B0B;
-  --color-border: #D4D4D1; /* 부드러운 회색 보더 */
-  --color-border-light: #E8E8E5; /* 더 연한 보더 */
-  --color-accent: #FF90E8;
-  --color-accent-light: #FFB3F0;
-  --color-accent-dark: #E066D1;
-  --color-soft: #C7F2E3;
-  --color-soft-light: #E5F9F3;
-  --color-success: #4ECDC4;
-  --color-warning: #FFD700;
-  --color-error: #FF6B6B;
-  --color-info: #90E8FF;
+  /* === BRUTAL CORE COLORS === */
+  --color-bg: #FFFFFF;          /* 순수 화이트 */
+  --color-ink: #000000;         /* 순수 검정 */
+  --color-border: #000000;      /* 검정 보더 */
+  --color-border-light: #000000; /* 모든 보더 검정 */
+  --color-accent: #FF90E8;      /* 원래 메인 핑크 */
+  --color-accent-light: #FFB3F0; /* 연한 핑크 */
+  --color-accent-dark: #E066D1; /* 진한 핑크 */
+  --color-soft: #C7F2E3;        /* 원래 민트색 */
+  --color-soft-light: #E5F9F3;  /* 연한 민트색 */
+  --color-success: #00FF00;     /* 네온 그린 */
+  --color-warning: #FFFF00;     /* 네온 옐로우 */
+  --color-error: #FF0000;       /* 순수 빨강 */
+  --color-info: #0066FF;        /* 전기 블루 */
 
   /* Spacing Scale (8pt grid) */
   --spacing-1: 4px;
@@ -61,9 +116,9 @@
   --spacing-20: 80px;
   --spacing-24: 96px;
 
-  /* Typography */
-  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-family-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Roboto Mono', monospace;
+  /* === BRUTAL TYPOGRAPHY === */
+  --font-family-sans: "Arial Black", "Helvetica Neue", sans-serif;
+  --font-family-mono: "Courier New", monospace;
 
   /* Font Sizes */
   --font-size-xs: 12px;
@@ -82,18 +137,18 @@
   --border-width-3: 3px;
   --border-width-4: 4px;
 
-  /* Border Radius - 더 둥글게 */
+  /* === BRUTAL BORDER RADIUS (각지게) === */
   --border-radius-none: 0;
-  --border-radius-sm: 16px;
-  --border-radius-md: 24px;
-  --border-radius-lg: 32px;
-  --border-radius-xl: 40px;
+  --border-radius-sm: 4px;      /* 거의 각짐 */
+  --border-radius-md: 6px;      /* 최소 둥글기 */
+  --border-radius-lg: 8px;      /* 최대치도 각짐 */
+  --border-radius-xl: 8px;      /* 모든 큰 요소도 각짐 */
 
-  /* Hard Shadows */
-  --box-shadow-brutal-sm: 0 4px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-md: 0 6px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-lg: 0 8px 0 rgba(11, 11, 11, 1);
-  --box-shadow-brutal-xl: 0 12px 0 rgba(11, 11, 11, 1);
+  /* === BRUTAL HARD SHADOWS === */
+  --box-shadow-brutal-sm: 4px 4px 0px 0px #000000;
+  --box-shadow-brutal-md: 6px 6px 0px 0px #000000;
+  --box-shadow-brutal-lg: 8px 8px 0px 0px #000000;
+  --box-shadow-brutal-xl: 12px 12px 0px 0px #000000;
 
   /* Animation Durations */
   --duration-fast: 120ms;
@@ -103,10 +158,10 @@
 
 /* Force Light Mode - Dark Mode Disabled */
 
-/* Force Light Background - Override any dark mode */
+/* === FORCE BRUTAL WHITE BACKGROUND === */
 html, body, #__next, [data-theme="dark"] {
-  background-color: #F4F4F0 !important;
-  color: #0B0B0B !important;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
 }
 
 /* Base Styles */
@@ -116,32 +171,34 @@ html, body, #__next, [data-theme="dark"] {
 
 html {
   scroll-behavior: smooth;
-  background-color: #F4F4F0; /* 직접 설정 */
+  background-color: #FFFFFF; /* 순수 화이트 */
 }
 
 body {
-  background-color: #F4F4F0; /* 직접 설정 */
-  color: #0B0B0B; /* 직접 설정 */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #FFFFFF; /* 순수 화이트 */
+  color: #000000; /* 순수 검정 */
+  font-family: "Arial Black", "Helvetica Neue", sans-serif; /* 브루탈 폰트 */
   font-size: 16px;
-  line-height: 1.5;
-  font-weight: 400;
+  line-height: 1.4; /* 더 타이트하게 */
+  font-weight: 700; /* 기본도 굵게 */
   margin: 0;
   padding: 0;
   min-height: 100vh;
 }
 
-/* Typography */
+/* === BRUTAL TYPOGRAPHY === */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 900; /* 최대 굵기 */
+  letter-spacing: 0.05em; /* 넓은 자간 */
   margin: 0;
+  font-family: "Arial Black", "Helvetica Neue", sans-serif;
+  text-transform: uppercase; /* 대문자 */
 }
 
 h1 {
   font-size: var(--font-size-6xl);
-  line-height: 1.125;
-  font-weight: 800;
+  line-height: 1.1; /* 더 타이트 */
+  font-weight: 900; /* 최대 굵기 */
 }
 
 h2 {
@@ -184,28 +241,101 @@ p {
   }
 }
 
-/* Neo-Brutalism Utility Classes */
+/* === BRUTAL NEO-BRUTALISM UTILITY CLASSES === */
+.neo-brutal-card {
+  border: var(--brutal-border-thick);
+  border-radius: var(--brutal-radius-md);
+  box-shadow: var(--brutal-shadow-lg);
+  background: var(--brutal-white);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
+}
+
+.neo-brutal-card:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: var(--brutal-shadow-md);
+}
+
+/* Legacy support */
 .brutal-card {
-  border: 3px solid var(--color-border);
-  background-color: var(--color-bg);
-  box-shadow: var(--box-shadow-brutal-md);
-  border-radius: var(--border-radius-xl);
+  border: var(--brutal-border-thick);
+  background-color: var(--brutal-white);
+  box-shadow: var(--brutal-shadow-lg);
+  border-radius: var(--brutal-radius-md);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
 }
 
 .brutal-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--box-shadow-brutal-lg);
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: var(--brutal-shadow-md);
 }
 
-.brutal-button {
-  border: 3px solid var(--color-accent);
-  background-color: var(--color-accent);
-  font-weight: 700;
+.neo-brutal-button-primary {
+  background: var(--brutal-pink);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-black);
+  font-family: var(--brutal-font-primary);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   padding: 12px 24px;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-brutal-md);
-  transition: all 150ms ease-out;
-  color: var(--color-ink);
+  border-radius: var(--brutal-radius-md);
+  box-shadow: var(--brutal-shadow-lg);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neo-brutal-button-primary:hover {
+  transform: rotate(0deg) translate(4px, 4px);
+  box-shadow: var(--brutal-shadow-sm);
+  background: var(--brutal-pink-dark);
+}
+
+.neo-brutal-button-secondary {
+  background: var(--brutal-white);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-black);
+  font-family: var(--brutal-font-primary);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  border-radius: var(--brutal-radius-md);
+  box-shadow: var(--brutal-shadow-lg);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neo-brutal-button-secondary:hover {
+  background: var(--brutal-pink-light);
+  color: var(--brutal-black);
+  transform: rotate(0deg) translate(4px, 4px);
+  box-shadow: var(--brutal-shadow-sm);
+}
+
+/* Legacy support */
+.brutal-button {
+  background: var(--brutal-pink);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-black);
+  font-family: var(--brutal-font-primary);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  border-radius: var(--brutal-radius-md);
+  box-shadow: var(--brutal-shadow-lg);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -213,25 +343,29 @@ p {
 }
 
 .brutal-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--box-shadow-brutal-lg);
-  background-color: var(--color-accent-light);
+  transform: rotate(0deg) translate(4px, 4px);
+  box-shadow: var(--brutal-shadow-sm);
+  background: var(--brutal-pink-dark);
 }
 
 .brutal-button:active {
-  transform: translateY(2px);
-  box-shadow: var(--box-shadow-brutal-sm);
+  transform: rotate(0deg) translate(6px, 6px);
+  box-shadow: 2px 2px 0px 0px var(--brutal-black);
 }
 
 .brutal-button-outline {
-  border: 3px solid var(--color-border);
-  background-color: transparent;
-  font-weight: 700;
+  border: var(--brutal-border-thick);
+  background-color: var(--brutal-white);
+  color: var(--brutal-black);
+  font-family: var(--brutal-font-primary);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   padding: 12px 24px;
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-brutal-md);
-  transition: all 150ms ease-out;
-  color: var(--color-ink);
+  border-radius: var(--brutal-radius-md);
+  box-shadow: var(--brutal-shadow-lg);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -239,126 +373,231 @@ p {
 }
 
 .brutal-button-outline:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--box-shadow-brutal-lg);
-  background-color: var(--color-accent-light);
-  border-color: var(--color-accent);
-  color: var(--color-ink);
+  transform: rotate(0deg) translate(4px, 4px);
+  box-shadow: var(--brutal-shadow-sm);
+  background-color: var(--brutal-pink-light);
+  color: var(--brutal-black);
 }
 
 .brutal-input {
-  border: 3px solid var(--color-border);
-  background-color: var(--color-bg);
+  border: var(--brutal-border-thick);
+  background-color: var(--brutal-white);
   padding: 12px 16px;
-  border-radius: var(--border-radius-xl);
-  color: var(--color-ink);
+  border-radius: var(--brutal-radius-md);
+  color: var(--brutal-black);
+  font-family: var(--brutal-font-primary);
+  font-weight: var(--brutal-weight-bold);
+  font-size: 16px; /* iOS 줄 방지 */
+  box-shadow: var(--brutal-shadow-sm);
+  transform: rotate(var(--brutal-rotate-slight));
+  transition: all 75ms ease-out;
 }
 
 .brutal-input:focus {
-  outline: none;
-  ring: 3px;
-  ring-color: var(--color-accent);
-  ring-offset: 2px;
+  outline: 3px solid var(--brutal-pink);
+  outline-offset: 2px;
+  transform: rotate(0deg);
+  box-shadow: var(--brutal-shadow-md);
 }
 
 .brutal-badge {
-  border: 2px solid var(--color-border-light);
+  border: 2px solid var(--brutal-black);
   background-color: var(--color-soft-light);
   padding: 4px 12px;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--brutal-radius-sm);
   font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--color-ink);
+  font-weight: var(--brutal-weight-black);
+  color: var(--brutal-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   display: inline-flex;
   align-items: center;
+  transform: rotate(var(--brutal-rotate-slight));
 }
 
 .brutal-progress {
-  border: 3px solid var(--color-border);
-  background-color: var(--color-bg);
-  border-radius: var(--border-radius-md);
+  border: var(--brutal-border-thick);
+  background-color: var(--brutal-white);
+  border-radius: var(--brutal-radius-sm);
   overflow: hidden;
+  box-shadow: var(--brutal-shadow-sm);
 }
 
 .brutal-progress-fill {
-  background-color: var(--color-accent);
+  background-color: var(--brutal-pink);
   height: 100%;
-  transition: all 500ms ease-out;
+  transition: all 300ms ease-out;
 }
 
-/* Cute Animation Classes */
+/* === BRUTAL ANIMATION CLASSES === */
+.bounce-brutal {
+  animation: bounceBrutal 0.3s ease-out;
+}
+
+@keyframes bounceBrutal {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+}
+
+/* Legacy support */
 .bounce-gentle {
-  animation: bounceGentle 0.6s ease-out;
+  animation: bounceBrutal 0.3s ease-out;
 }
 
 @keyframes bounceGentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
 }
 
+.shake-brutal {
+  animation: shakeBrutal 0.3s ease-in-out;
+}
+
+@keyframes shakeBrutal {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg) translateX(-8px); }
+  75% { transform: rotate(3deg) translateX(8px); }
+}
+
+/* Legacy support */
 .shake {
-  animation: shake 0.5s ease-in-out;
+  animation: shakeBrutal 0.3s ease-in-out;
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg) translateX(-8px); }
+  75% { transform: rotate(3deg) translateX(8px); }
 }
 
+.pulse-brutal {
+  animation: pulseBrutal 1s ease-in-out infinite;
+}
+
+@keyframes pulseBrutal {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(1deg); }
+}
+
+/* Legacy support */
 .pulse-gentle {
-  animation: pulseGentle 1.5s ease-in-out infinite;
+  animation: pulseBrutal 1s ease-in-out infinite;
 }
 
 @keyframes pulseGentle {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(1deg); }
 }
 
-/* Status Colors */
+/* === BRUTAL STATUS COLORS === */
 .status-success {
-  background-color: var(--color-success);
-  border-color: var(--color-success);
-  color: white;
+  background-color: var(--brutal-green);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-black);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  transform: rotate(var(--brutal-rotate-slight));
 }
 
 .status-warning {
-  background-color: var(--color-warning);
-  border-color: var(--color-warning);
-  color: var(--color-ink);
+  background-color: var(--brutal-yellow);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-black);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  transform: rotate(var(--brutal-rotate-slight));
 }
 
 .status-error {
-  background-color: var(--color-error);
-  border-color: var(--color-error);
-  color: white;
+  background-color: var(--brutal-red);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-white);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  transform: rotate(var(--brutal-rotate-slight));
 }
 
 .status-info {
-  background-color: var(--color-info);
-  border-color: var(--color-info);
-  color: var(--color-ink);
+  background-color: var(--brutal-blue);
+  border: var(--brutal-border-thick);
+  color: var(--brutal-white);
+  font-weight: var(--brutal-weight-black);
+  text-transform: uppercase;
+  transform: rotate(var(--brutal-rotate-slight));
 }
 
-/* Mobile Typography Overrides */
+/* === BRUTAL MOBILE OPTIMIZATIONS === */
 @media (max-width: 768px) {
+  /* 모바일에서는 더 큰 터치 영역과 굵은 요소들 */
+  .neo-brutal-button-primary,
+  .brutal-button {
+    min-height: 60px;
+    border-width: 6px;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .neo-brutal-card,
+  .brutal-card {
+    border-width: 5px;
+    box-shadow: 6px 6px 0px 0px #000;
+    /* 모바일에서는 회전 최소화 (사용성) */
+    transform: rotate(0deg);
+  }
+
   h1 {
     font-size: var(--font-size-4xl);
-    line-height: 1.2;
+    line-height: 1.1;
+    font-weight: 900;
   }
 
   h2 {
     font-size: var(--font-size-2xl);
-    line-height: 1.3;
+    line-height: 1.2;
+    font-weight: 900;
   }
 
   h3 {
     font-size: var(--font-size-xl);
-    line-height: 1.36;
+    line-height: 1.3;
+    font-weight: 900;
   }
 
   body {
     font-size: var(--font-size-sm);
-    line-height: 1.57;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+}
+
+/* === BRUTAL TABLET OPTIMIZATIONS (최대 브루탈리즘) === */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .neo-brutal-card,
+  .brutal-card {
+    transform: rotate(2deg);
+    border-width: 5px;
+    box-shadow: 8px 8px 0px 0px #000;
+  }
+  
+  .quiz-container {
+    /* 퀴즈 카드들을 비대칭으로 배치 */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    transform: rotate(-1deg);
+  }
+
+  .neo-brutal-button-primary,
+  .brutal-button {
+    font-size: 20px;
+    padding: 16px 32px;
+    transform: rotate(2deg);
+  }
+
+  .neo-brutal-button-primary:hover,
+  .brutal-button:hover {
+    transform: rotate(0deg) translate(6px, 6px);
   }
 }

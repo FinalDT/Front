@@ -1,6 +1,6 @@
 export { GradeSelector } from './GradeSelector';
 export { Quiz } from './Quiz';
-export { CuteQuiz } from './CuteQuiz';
+export { BrutalQuiz } from './BrutalQuiz';
 export { QuizTimer } from './QuizTimer';
 export { AnimatedQuizTimer } from './AnimatedQuizTimer';
 export { ChatBubble, TypingIndicator } from './ChatBubble';

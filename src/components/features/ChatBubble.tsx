@@ -92,10 +92,33 @@ export function ChatBubble({ message, isStreaming = false, onActionClick }: Chat
               isUser ? 'text-right' : 'text-left'
             )}
           >
-            {message.timestamp.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+{(() => {
+              try {
+                // timestamp가 Date 객체가 아닐 경우 Date로 변환
+                const timestamp = message.timestamp instanceof Date 
+                  ? message.timestamp 
+                  : new Date(message.timestamp);
+                
+                // 유효한 Date 객체인지 확인
+                if (isNaN(timestamp.getTime())) {
+                  return new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
+                }
+                
+                return timestamp.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+              } catch (error) {
+                // 오류 발생시 현재 시간 사용
+                return new Date().toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+              }
+            })()}
           </div>
 
           {/* Message Actions (Desktop) */}

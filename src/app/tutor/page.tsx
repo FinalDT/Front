@@ -77,7 +77,12 @@ export default function TutorPage() {
     // Load saved messages
     const savedMessages = storage.get('tutorMessages');
     if (savedMessages && Array.isArray(savedMessages)) {
-      setMessages(savedMessages);
+      // timestamp를 Date 객체로 복원
+      const restoredMessages = savedMessages.map(msg => ({
+        ...msg,
+        timestamp: msg.timestamp instanceof Date ? msg.timestamp : new Date(msg.timestamp)
+      }));
+      setMessages(restoredMessages);
     }
 
     // Welcome message for first visit
