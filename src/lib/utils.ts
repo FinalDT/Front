@@ -70,12 +70,20 @@ export const session = {
 
   login: (userId: string) => {
     storage.set('auth_user_id', userId);
+    // 인증 상태 변경 이벤트 발생
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('authChange', { detail: { type: 'login', userId } }));
+    }
   },
 
   logout: () => {
     storage.remove('auth_user_id');
     storage.remove('guestSessionId');
     storage.remove('lastQuiz');
+    // 인증 상태 변경 이벤트 발생
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('authChange', { detail: { type: 'logout' } }));
+    }
   }
 };
 

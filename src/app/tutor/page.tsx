@@ -266,17 +266,17 @@ export default function TutorPage() {
         <motion.div 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-3 sticky top-0 z-30 flex-shrink-0"
+          className="bg-bg/95 backdrop-blur-sm border-b-[2px] border-ink/50 p-3 sticky top-0 z-30 flex-shrink-0"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <button 
                 onClick={() => router.back()}
-                className="w-8 h-8 brutal-card bg-bg hover:bg-gray-200 flex items-center justify-center text-[14px] transition-colors"
+                className="w-8 h-8 border-[2px] border-ink bg-bg hover:bg-soft-light flex items-center justify-center text-[14px] transition-colors shadow-[0_1px_0_rgba(0,0,0,0.2)]"
               >
                 ←
               </button>
-              <div className="w-12 h-12 brutal-card bg-accent flex items-center justify-center pulse-gentle">
+              <div className="w-12 h-12 border-[2px] border-ink bg-accent-light flex items-center justify-center pulse-gentle shadow-[0_2px_0_rgba(0,0,0,0.2)]">
                 <span className="text-[20px]">🤖</span>
               </div>
               <div>
@@ -460,11 +460,11 @@ export default function TutorPage() {
           <motion.div 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-bg/95 backdrop-blur-sm border-b-[3px] border-ink p-4 flex-shrink-0"
+            className="bg-bg/95 backdrop-blur-sm border-b-[2px] border-ink/50 p-4 flex-shrink-0"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 brutal-card bg-accent flex items-center justify-center pulse-gentle">
+                <div className="w-16 h-16 border-[2px] border-ink bg-accent-light flex items-center justify-center pulse-gentle shadow-[0_2px_0_rgba(0,0,0,0.2)]">
                   <span className="text-[24px]">🤖</span>
                 </div>
                 <div>
@@ -622,7 +622,7 @@ export default function TutorPage() {
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-bg/95 backdrop-blur-sm border-t-[3px] border-ink p-4 flex-shrink-0"
+            className="bg-bg/95 backdrop-blur-sm border-t-[2px] border-ink/50 p-4 flex-shrink-0"
           >
             <div className="flex gap-3">
               <input

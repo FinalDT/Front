@@ -1,6 +1,7 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 export interface ButtonProps
@@ -22,107 +23,219 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     ...props
   }, ref) => {
+    const [isFocused, setIsFocused] = useState(false);
     const baseStyles = `
       inline-flex items-center justify-center
       font-black uppercase tracking-wide
       border-4 border-black
-      transition-all duration-75 ease-out
       cursor-pointer text-center
-      hover:translate-x-1 hover:translate-y-1
-      active:translate-x-2 active:translate-y-2
-      focus:outline-4 focus:outline-[#FF90E8] focus:outline-offset-2
+      focus:outline-none
       disabled:opacity-60 disabled:cursor-not-allowed
-      disabled:hover:translate-x-0 disabled:hover:translate-y-0
       font-[Arial Black, Helvetica Neue, sans-serif]
     `;
 
     const variants = {
       primary: `
-        bg-[#FF90E8] text-black
+        text-black
         shadow-[6px_6px_0px_0px_#000]
-        hover:shadow-[4px_4px_0px_0px_#000]
-        hover:bg-[#E066D1]
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:bg-[#FF90E8] disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       secondary: `
-        bg-white text-black
+        text-black
         shadow-[6px_6px_0px_0px_#000]
-        hover:shadow-[4px_4px_0px_0px_#000]
-        hover:bg-[#FFB3F0] hover:text-black
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:bg-white disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       danger: `
-        bg-[#FF0000] text-white
+        text-white
         shadow-[6px_6px_0px_0px_#000]
-        hover:shadow-[4px_4px_0px_0px_#000]
-        hover:bg-[#CC0000]
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:bg-[#FF0000] disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       success: `
-        bg-[#00FF00] text-black
+        text-black
         shadow-[6px_6px_0px_0px_#000]
-        hover:shadow-[4px_4px_0px_0px_#000]
-        hover:bg-[#00CC00]
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:bg-[#00FF00] disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       outline: `
-        bg-white text-black
+        text-black
         shadow-[6px_6px_0px_0px_#000]
-        hover:shadow-[4px_4px_0px_0px_#000]
-        hover:bg-[#FFB3F0] hover:text-black
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:bg-white disabled:shadow-[6px_6px_0px_0px_#000]
       `,
       ghost: `
-        bg-transparent text-black border-transparent
+        text-black border-transparent
         shadow-none
-        hover:bg-[#FFB3F0] hover:border-black hover:shadow-[4px_4px_0px_0px_#000]
-        active:shadow-[2px_2px_0px_0px_#000]
-        disabled:hover:bg-transparent disabled:hover:border-transparent disabled:hover:shadow-none
       `
     };
 
     const sizes = {
-      sm: 'h-10 px-4 text-sm min-w-[80px] shadow-[4px_4px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000]',
-      md: 'h-12 px-6 text-base min-w-[120px] shadow-[6px_6px_0px_0px_#000] hover:shadow-[4px_4px_0px_0px_#000]',
-      lg: 'h-14 px-8 text-lg min-w-[140px] shadow-[8px_8px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000]',
-      xl: 'h-16 px-10 text-xl min-w-[160px] shadow-[10px_10px_0px_0px_#000] hover:shadow-[8px_8px_0px_0px_#000]'
+      sm: 'h-10 px-4 text-sm min-w-[80px]',
+      md: 'h-12 px-6 text-base min-w-[120px]',
+      lg: 'h-14 px-8 text-lg min-w-[140px]',
+      xl: 'h-16 px-10 text-xl min-w-[160px]'
     };
 
-    const rotations = {
-      none: 'rotate-0',
-      slight: 'rotate-1 hover:rotate-0',
-      mild: 'rotate-2 hover:rotate-0',
-      bold: 'rotate-3 hover:rotate-0'
+    const shadowSizes = {
+      sm: { default: '4px 4px 0px 0px #000', hover: '2px 2px 0px 0px #000', active: '1px 1px 0px 0px #000' },
+      md: { default: '6px 6px 0px 0px #000', hover: '4px 4px 0px 0px #000', active: '2px 2px 0px 0px #000' },
+      lg: { default: '8px 8px 0px 0px #000', hover: '6px 6px 0px 0px #000', active: '3px 3px 0px 0px #000' },
+      xl: { default: '10px 10px 0px 0px #000', hover: '8px 8px 0px 0px #000', active: '4px 4px 0px 0px #000' }
+    };
+
+    const rotationValues = {
+      none: 0,
+      slight: 1,
+      mild: 2,
+      bold: 3
+    };
+
+    const colorPalettes = {
+      primary: {
+        default: '#FF90E8',
+        hover: '#E066D1',
+        active: '#C850B8',
+        disabled: '#FF90E8'
+      },
+      secondary: {
+        default: '#FFFFFF',
+        hover: '#FFB3F0',
+        active: '#FF90E8',
+        disabled: '#FFFFFF'
+      },
+      danger: {
+        default: '#FF0000',
+        hover: '#CC0000',
+        active: '#990000',
+        disabled: '#FF0000'
+      },
+      success: {
+        default: '#00FF00',
+        hover: '#00CC00',
+        active: '#009900',
+        disabled: '#00FF00'
+      },
+      outline: {
+        default: '#FFFFFF',
+        hover: '#FFB3F0',
+        active: '#FF90E8',
+        disabled: '#FFFFFF'
+      },
+      ghost: {
+        default: 'transparent',
+        hover: '#FFB3F0',
+        active: '#FF90E8',
+        disabled: 'transparent'
+      }
     };
 
     return (
-      <button
-        className={cn(
-          baseStyles,
-          variants[variant],
-          sizes[size],
-          rotations[rotation],
-          className
-        )}
-        ref={ref}
-        disabled={disabled || isLoading}
-        aria-busy={isLoading}
-        {...props}
-      >
-        {isLoading && (
-          <div className="mr-2 flex space-x-1">
-            <div className="w-2 h-2 bg-current animate-bounce" />
-            <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.1s' }} />
-            <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.2s' }} />
-          </div>
-        )}
-        {children}
-      </button>
+      <div className="relative inline-block">
+        <motion.button
+          className={cn(
+            baseStyles,
+            variants[variant],
+            sizes[size],
+            className
+          )}
+          ref={ref}
+          disabled={disabled || isLoading}
+          aria-busy={isLoading}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          initial={{
+            rotate: rotationValues[rotation],
+            x: 0,
+            y: 0,
+            boxShadow: shadowSizes[size].default,
+            backgroundColor: colorPalettes[variant].default,
+          }}
+          whileHover={
+            disabled || isLoading
+              ? {}
+              : {
+                  rotate: 0,
+                  x: 2,
+                  y: 2,
+                  boxShadow: shadowSizes[size].hover,
+                  backgroundColor: colorPalettes[variant].hover,
+                  transition: {
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 25,
+                    mass: 0.8,
+                    backgroundColor: {
+                      type: "tween",
+                      duration: 0.2,
+                      ease: "easeOut"
+                    }
+                  }
+                }
+          }
+          whileTap={
+            disabled || isLoading
+              ? {}
+              : {
+                  rotate: 0,
+                  x: 4,
+                  y: 4,
+                  boxShadow: shadowSizes[size].active,
+                  backgroundColor: colorPalettes[variant].active,
+                  scale: 0.98,
+                  transition: {
+                    type: "spring",
+                    stiffness: 600,
+                    damping: 30,
+                    mass: 0.6,
+                    backgroundColor: {
+                      type: "tween",
+                      duration: 0.15,
+                      ease: "easeOut"
+                    },
+                    scale: {
+                      type: "spring",
+                      stiffness: 600,
+                      damping: 30,
+                      mass: 0.6
+                    }
+                  }
+                }
+          }
+          {...props}
+        >
+          {isLoading && (
+            <div className="mr-2 flex space-x-1">
+              <div className="w-2 h-2 bg-current animate-bounce" />
+              <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.1s' }} />
+              <div className="w-2 h-2 bg-current animate-bounce" style={{ animationDelay: '0.2s' }} />
+            </div>
+          )}
+          {children}
+        </motion.button>
+
+        {/* Focus Outline Animation */}
+        <AnimatePresence>
+          {isFocused && !disabled && !isLoading && (
+            <motion.div
+              className="absolute inset-0 border-4 border-[#FF90E8] pointer-events-none"
+              style={{
+                borderRadius: 'inherit',
+                margin: '-2px'
+              }}
+              initial={{
+                scale: 0.8,
+                opacity: 0
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1
+              }}
+              exit={{
+                scale: 0.8,
+                opacity: 0
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 25,
+                mass: 0.6
+              }}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     );
   }
 );

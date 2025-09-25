@@ -47,8 +47,8 @@ export function ChatBubble({ message, isStreaming = false, onActionClick }: Chat
       {/* Avatar */}
       <div
         className={cn(
-          'w-10 h-10 border-[3px] border-ink flex items-center justify-center flex-shrink-0',
-          isUser ? 'bg-accent' : 'bg-bg shadow-[0_4px_0_rgba(0,0,0,1)]'
+          'w-10 h-10 border-[2px] border-ink flex items-center justify-center flex-shrink-0',
+          isUser ? 'bg-accent' : 'bg-soft-light shadow-[0_2px_0_rgba(0,0,0,0.3)]'
         )}
       >
         <span className="text-[16px]">
@@ -67,12 +67,12 @@ export function ChatBubble({ message, isStreaming = false, onActionClick }: Chat
         <div
           className={cn(
             `
-              p-4 border-[3px] border-ink relative
+              p-4 border-[2px] border-ink relative
               break-words hyphens-auto
             `,
             isUser
-              ? 'bg-accent shadow-[0_6px_0_rgba(0,0,0,1)] rounded-tl-[12px] rounded-bl-[12px] rounded-br-[4px]'
-              : 'bg-bg shadow-[0_6px_0_rgba(0,0,0,1)] rounded-tr-[12px] rounded-br-[12px] rounded-bl-[4px]'
+              ? 'bg-accent-light shadow-[0_2px_0_rgba(0,0,0,0.3)] rounded-tl-[12px] rounded-bl-[12px] rounded-br-[4px]'
+              : 'bg-soft-light shadow-[0_2px_0_rgba(0,0,0,0.3)] rounded-tr-[12px] rounded-br-[12px] rounded-bl-[4px]'
           )}
           onMouseEnter={() => setShowActions(true)}
           onMouseLeave={() => setShowActions(false)}

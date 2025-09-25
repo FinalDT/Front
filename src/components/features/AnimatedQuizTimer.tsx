@@ -84,16 +84,15 @@ export function AnimatedQuizTimer({
       backgroundColor: colors.bg,
       borderColor: colors.border,
       boxShadow: colors.shadow,
-      scale: 1.02,
+      scale: 1,
       transition: { duration: 0.3, ease: "easeOut" as const }
     },
     critical: {
       backgroundColor: colors.bg,
       borderColor: colors.border,
       boxShadow: colors.shadow,
-      scale: [1.02, 1.05, 1.02],
-      transition: { 
-        scale: { duration: 0.6, repeat: Infinity, ease: "easeInOut" as const },
+      scale: 1,
+      transition: {
         other: { duration: 0.3, ease: "easeOut" as const }
       }
     }
@@ -125,16 +124,16 @@ export function AnimatedQuizTimer({
   const currentState = isCritical ? 'critical' : isWarning ? 'warning' : 'normal';
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full px-2 overflow-x-hidden', className)}>
       {/* 메인 타이머 */}
       <motion.div
-        className="relative w-full p-4 border-[3px] bg-white"
+        className="relative w-full p-3 border-[3px] bg-white"
         variants={containerVariants}
         animate={currentState}
         initial="normal"
       >
         {/* 헤더 */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-3">
             <motion.div 
               className="w-4 h-4 border-[2px] border-ink"
@@ -164,7 +163,7 @@ export function AnimatedQuizTimer({
 
         {/* 애니메이션 진행 바 */}
         <div className="relative w-full">
-          <div className="w-full h-6 md:h-8 border-[3px] border-ink bg-bg overflow-hidden">
+          <div className="w-full h-5 md:h-6 border-[3px] border-ink bg-bg overflow-hidden">
             <motion.div
               className="h-full"
               style={{ backgroundColor: colors.progress }}
@@ -192,30 +191,6 @@ export function AnimatedQuizTimer({
           </motion.div>
         </div>
 
-        {/* 상태 메시지 */}
-        <motion.div 
-          className="mt-2 flex items-center justify-between text-[12px] md:text-[14px]"
-          animate={{ color: colors.text }}
-        >
-          <motion.span 
-            className="font-medium"
-            animate={{ 
-              x: isCritical ? [-2, 2, -2, 2, 0] : 0 
-            }}
-            transition={{ 
-              duration: 0.4, 
-              repeat: isCritical ? Infinity : 0,
-              repeatDelay: 1 
-            }}
-          >
-            {isRunning ? (
-              isCritical ? '🚨 급해요!' : isWarning ? '⚠️ 서둘러요!' : '⏱️ 진행 중'
-            ) : timeLeft === 0 ? '⏰ 시간 종료' : '⏸️ 대기 중'}
-          </motion.span>
-          <span className="text-ink opacity-60 text-[11px] md:text-[12px]">
-            총 {duration}초
-          </span>
-        </motion.div>
       </motion.div>
 
       {/* 위험 상태 경고 */}

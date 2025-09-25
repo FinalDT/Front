@@ -14,6 +14,7 @@ export default function ResultsTeaserPage() {
   const [result, setResult] = useState<QuizResult | null>(null);
   const [session, setSession] = useState<GuestSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [questionTimes, setQuestionTimes] = useState<number[]>([]);
 
   useEffect(() => {
     const loadResults = async () => {
@@ -29,6 +30,10 @@ export default function ResultsTeaserPage() {
           // Generate mock result
           const mockResult = generateMockResult(savedSession.answers, savedSession.grade);
           setResult(mockResult);
+
+          // 시간 데이터 로드
+          const savedQuestionTimes = storage.get('quizQuestionTimes') || savedSession.questionTimes || [];
+          setQuestionTimes(savedQuestionTimes);
         }
       } catch (error) {
         console.error('Failed to load results:', error);
@@ -155,6 +160,73 @@ export default function ResultsTeaserPage() {
             </div>
           </Card>
         </div>
+
+        {/* 시간 분석 섹션 - 네오브루탈리즘 스타일 */}
+        {questionTimes.length > 0 && (
+          <Card className="mb-8 bg-gradient-to-br from-soft/30 to-accent/10">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 brutal-card bg-warning flex items-center justify-center text-[20px]">
+                  ⏱️
+                </div>
+                <div>
+                  <h3 className="text-[20px] font-bold text-ink">문제별 소요 시간</h3>
+                  <p className="text-[14px] text-ink/70">각 문제를 푸는 데 걸린 시간입니다</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {questionTimes.slice(0, 3).map((time, index) => {
+                  const isSpeedBonus = time < 10;
+                  return (
+                    <div key={index} className={cn(
+                      "brutal-card p-4 text-center space-y-2",
+                      isSpeedBonus ? "bg-warning/20 border-warning" : "bg-bg"
+                    )}>
+                      <div className="text-[14px] font-bold text-ink">
+                        문제 {index + 1}
+                      </div>
+                      <div className="text-[24px] font-bold text-accent">
+                        {time}초
+                      </div>
+                      {isSpeedBonus && (
+                        <div className="brutal-badge bg-warning text-ink text-xs">
+                          ⚡ 스피드 보너스!
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 평균 시간 */}
+              <div className="pt-4 border-t-[2px] border-ink/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-[16px] font-bold text-ink">평균 소요 시간:</span>
+                  <span className="text-[20px] font-bold text-accent">
+                    {Math.round(questionTimes.reduce((a, b) => a + b, 0) / questionTimes.length)}초
+                  </span>
+                </div>
+              </div>
+
+              {/* 나머지 시간 데이터는 로그인 후 볼 수 있도록 */}
+              {questionTimes.length > 3 && (
+                <div className="pt-4 border-t-[2px] border-ink/20">
+                  <div className="brutal-card p-3 bg-soft/20 text-center">
+                    <div className="flex items-center justify-center space-x-2">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M4 8V6a4 4 0 018 0v2h.8A.8.8 0 0113.6 8.8v5.6a.8.8 0 01-.8.8H3.2a.8.8 0 01-.8-.8V8.8A.8.8 0 013.2 8H4z" />
+                      </svg>
+                      <span className="text-[12px] font-medium text-ink">
+                        나머지 {questionTimes.length - 3}개 문제 시간 분석
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
 
         {/* Concept Scores - Partially Visible */}
         <Card className="mb-12">

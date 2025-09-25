@@ -11,9 +11,7 @@ export const metadata: Metadata = {
   creator: "STUDIYA",
   publisher: "STUDIYA",
   icons: {
-    icon: '/icon',
-    apple: '/icon',
-    shortcut: '/icon',
+    icon: '/favicon.ico',
   },
   manifest: "/manifest.json",
   other: {

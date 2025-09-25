@@ -74,6 +74,14 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
       correctAnswer: 1,
       concept: '평면도형',
       difficulty: 'easy'
+    },
+    {
+      id: '1-6',
+      question: '2⁴의 값은?',
+      options: ['8', '16', '32', '64'],
+      correctAnswer: 1,
+      concept: '거듭제곱',
+      difficulty: 'easy'
     }
   ],
   '중2': [
@@ -116,6 +124,14 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
       correctAnswer: 0,
       concept: '사각형의 성질',
       difficulty: 'medium'
+    },
+    {
+      id: '2-6',
+      question: '연립방정식 { x + y = 5, x - y = 1 }의 해는?',
+      options: ['x=3, y=2', 'x=2, y=3', 'x=4, y=1', 'x=1, y=4'],
+      correctAnswer: 0,
+      concept: '연립방정식',
+      difficulty: 'medium'
     }
   ],
   '중3': [
@@ -157,6 +173,14 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
       options: ['3/5', '4/5', '3/4', '4/3'],
       correctAnswer: 0,
       concept: '삼각비',
+      difficulty: 'hard'
+    },
+    {
+      id: '3-6',
+      question: '포물선 y = x² - 4x + 3과 x축과의 교점의 개수는?',
+      options: ['0개', '1개', '2개', '3개'],
+      correctAnswer: 2,
+      concept: '이차함수와 x축의 교점',
       difficulty: 'hard'
     }
   ]

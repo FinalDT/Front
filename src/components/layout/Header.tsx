@@ -17,6 +17,34 @@ export function Header() {
     setIsLoaded(true);
   }, []);
 
+  // 경로 변경 시 인증 상태 재확인
+  useEffect(() => {
+    setIsAuthenticated(session.isAuthenticated());
+  }, [pathname]);
+
+  // localStorage 이벤트 리스너 (로그인/로그아웃 감지)
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'sessionData' || e.key === 'userToken') {
+        setIsAuthenticated(session.isAuthenticated());
+      }
+    };
+
+    const handleCustomAuthChange = () => {
+      setIsAuthenticated(session.isAuthenticated());
+    };
+
+    // storage 이벤트 리스너
+    window.addEventListener('storage', handleStorageChange);
+    // 커스텀 이벤트 리스너 (같은 탭에서 로그인 시 감지)
+    window.addEventListener('authChange', handleCustomAuthChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChange', handleCustomAuthChange);
+    };
+  }, []);
+
   return (
     <header
       role="banner"

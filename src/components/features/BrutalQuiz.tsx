@@ -8,6 +8,7 @@ import { AnimatedQuizTimer } from './AnimatedQuizTimer';
 import { QuizQuestion, mockQuizQuestions } from '@/lib/mockData';
 import { Grade, storage, isValidGrade } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { transformQuizDataForBackend, sendQuizDataToBackend } from '@/lib/backendUtils';
 
 interface BrutalQuizProps {
   sessionId: string;
@@ -159,6 +160,11 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
   const [streak, setStreak] = useState(0);
   const [hearts, setHearts] = useState(5);
   const [showHint, setShowHint] = useState(false);
+  const [autoAdvanceTimeout, setAutoAdvanceTimeout] = useState<NodeJS.Timeout | null>(null);
+  // 시간 측정 관련 상태
+  const [questionStartTime, setQuestionStartTime] = useState<Date | null>(null);
+  const [questionTimes, setQuestionTimes] = useState<number[]>([]);
+  const [answerTimestamps, setAnswerTimestamps] = useState<Date[]>([]);
 
   // Load session and questions
   useEffect(() => {
@@ -205,6 +211,8 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
   useEffect(() => {
     if (questions.length > 0) {
       setIsTimerActive(true);
+      // 문제 시작 시간 기록
+      setQuestionStartTime(new Date());
     }
   }, [currentQuestion, questions]);
 
@@ -237,6 +245,18 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
     // Check if answer is correct
     const isCorrect = selectedAnswer === question.correctAnswer;
     setFeedbackType(isCorrect ? 'correct' : 'wrong');
+
+    // 문제 소요 시간 계산
+    if (questionStartTime) {
+      const endTime = new Date();
+      const timeSpent = Math.round((endTime.getTime() - questionStartTime.getTime()) / 1000);
+      const newQuestionTimes = [...questionTimes];
+      newQuestionTimes[currentQuestion] = timeSpent;
+      setQuestionTimes(newQuestionTimes);
+
+      // 로컬 스토리지에 저장
+      storage.set('quizQuestionTimes', newQuestionTimes);
+    }
     
     // Update hearts and streak
     if (isCorrect) {
@@ -249,25 +269,38 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
       storage.set('quizStreak', 0);
     }
 
-    // Save answer
+    // Save answer and timestamp
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = selectedAnswer;
     setAnswers(newAnswers);
     storage.set('quizAnswers', newAnswers);
 
+    // Save answer timestamp
+    const newTimestamps = [...answerTimestamps];
+    newTimestamps[currentQuestion] = new Date();
+    setAnswerTimestamps(newTimestamps);
+
     // Show feedback with brutal timing
     setTimeout(() => {
       setShowFeedback(true);
       setIsLoading(false);
-      
-      // Auto-advance after feedback
-      setTimeout(() => {
+
+      // Auto-advance after feedback (with cleanup)
+      const timeoutId = setTimeout(() => {
         handleNext();
       }, isCorrect ? 3000 : 2500); // 정답시 더 오래 축하
+
+      setAutoAdvanceTimeout(timeoutId);
     }, 300); // 더 빠른 피드백
   };
 
   const handleNext = () => {
+    // Clear any pending auto-advance
+    if (autoAdvanceTimeout) {
+      clearTimeout(autoAdvanceTimeout);
+      setAutoAdvanceTimeout(null);
+    }
+
     setShowFeedback(false);
     setFeedbackType(null);
     setSelectedAnswer(null);
@@ -277,17 +310,39 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
     } else {
       // Quiz completed
       setIsLoading(true);
-      
-      setTimeout(() => {
+
+      setTimeout(async () => {
         const session = storage.get('guestSession');
         if (session) {
           session.answers = answers;
           session.completed = true;
+          session.questionTimes = questionTimes; // 시간 데이터 추가
           storage.set('guestSession', session);
           storage.set('lastQuiz', answers);
         }
         storage.set('quizCompleted', true);
-        
+
+        // Send data to backend
+        try {
+          const backendData = transformQuizDataForBackend({
+            sessionId: sessionId,
+            grade: grade,
+            startTime: session?.startedAt || new Date(),
+            answers: answers.map((answer, index) => ({
+              questionIndex: index,
+              selectedAnswer: answer,
+              correctAnswer: questions[index]?.correctAnswer || 0,
+              submittedAt: answerTimestamps[index] || new Date()
+            }))
+          });
+
+          await sendQuizDataToBackend(backendData);
+          console.log('✅ Quiz data successfully sent to backend');
+        } catch (error) {
+          console.error('❌ Failed to send quiz data to backend:', error);
+          // Continue even if backend fails
+        }
+
         router.push(`/results-teaser?session=${sessionId}`);
       }, 500);
     }
@@ -295,18 +350,20 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
 
   const handleTimeUp = () => {
     if (showFeedback) return;
-    
+
     setHearts(prev => Math.max(0, prev - 1));
     storage.set('quizHearts', Math.max(0, hearts - 1));
     setStreak(0);
     storage.set('quizStreak', 0);
-    
+
     setFeedbackType('wrong');
     setShowFeedback(true);
-    
-    setTimeout(() => {
+
+    const timeoutId = setTimeout(() => {
       handleNext();
     }, 2000);
+
+    setAutoAdvanceTimeout(timeoutId);
   };
 
   const handleHint = () => {
@@ -330,7 +387,7 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* 브루탈 헤더 바 */}
       <div className="sticky top-0 z-40 bg-white border-b-4 border-black">
         <div className="flex items-center justify-between p-4 max-w-4xl mx-auto">
@@ -396,49 +453,52 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
               animate={{ opacity: 1, x: 0, rotate: 0 }}
               exit={{ opacity: 0, x: -100, rotate: -5 }}
               transition={{ duration: 0.3, ease: "easeOut" as const }}
-              className="space-y-8"
+              className="space-y-6"
             >
-              {/* 브루탈 문제 카드 */}
-              <div className="bg-white border-4 border-black p-8 text-center
-                             shadow-[12px_12px_0px_0px_#000] rotate-[-1deg]">
-                {/* 문제 타입 배지 */}
-                <div className="inline-flex items-center space-x-2 bg-[#C7F2E3] px-4 py-2 
-                               border-2 border-black mb-6 font-black text-black uppercase
-                               shadow-[4px_4px_0px_0px_#000] rotate-2">
-                  <span className="text-lg">📝</span>
-                  <span className="font-black">{question.type || '객관식'}</span>
+              {/* 수평 레이아웃: 문제 + 답안 */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+                {/* 왼쪽: 브루탈 문제 카드 */}
+                <div className="bg-white border-4 border-black p-6 lg:p-8 text-center
+                               shadow-[12px_12px_0px_0px_#000] rotate-[-1deg] h-fit">
+                  {/* 문제 타입 배지 */}
+                  <div className="inline-flex items-center space-x-2 bg-[#C7F2E3] px-3 py-2
+                                 border-2 border-black mb-4 lg:mb-6 font-black text-black uppercase text-sm lg:text-base
+                                 shadow-[4px_4px_0px_0px_#000] rotate-2">
+                    <span className="text-base lg:text-lg">📝</span>
+                    <span className="font-black">{question.type || '객관식'}</span>
+                  </div>
+
+                  {/* 문제 텍스트 */}
+                  <h2 className="text-xl lg:text-3xl xl:text-4xl font-black text-black mb-4 lg:mb-6 leading-tight uppercase">
+                    {question.question}
+                  </h2>
+
+                  {/* 문제 이미지/수식 */}
+                  {question.image && (
+                    <div className="mb-4 lg:mb-6 p-4 lg:p-6 bg-[#E5F9F3] border-4 border-black
+                                   shadow-[6px_6px_0px_0px_#000] rotate-1">
+                      <div className="text-lg lg:text-xl font-mono text-black font-bold">
+                        {question.image}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* 문제 텍스트 */}
-                <h2 className="text-3xl md:text-4xl font-black text-black mb-6 leading-tight uppercase">
-                  {question.question}
-                </h2>
-
-                {/* 문제 이미지/수식 */}
-                {question.image && (
-                  <div className="mb-6 p-6 bg-[#E5F9F3] border-4 border-black
-                                 shadow-[6px_6px_0px_0px_#000] rotate-1">
-                    <div className="text-xl font-mono text-black font-bold">
-                      {question.image}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* 브루탈 답안 선택지 */}
-              <div className="grid gap-4">
-                {question.options.map((option, index) => (
-                  <BrutalAnswerChoice
-                    key={index}
-                    choice={option}
-                    index={index}
-                    isSelected={selectedAnswer === index}
-                    isCorrect={index === question.correctAnswer}
-                    isRevealed={showFeedback}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showFeedback || isLoading}
-                  />
-                ))}
+                {/* 오른쪽: 브루탈 답안 선택지 */}
+                <div className="grid gap-3 lg:gap-4">
+                  {question.options.map((option, index) => (
+                    <BrutalAnswerChoice
+                      key={index}
+                      choice={option}
+                      index={index}
+                      isSelected={selectedAnswer === index}
+                      isCorrect={index === question.correctAnswer}
+                      isRevealed={showFeedback}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={showFeedback || isLoading}
+                    />
+                  ))}
+                </div>
               </div>
 
               {/* 브루탈 액션 버튼들 */}

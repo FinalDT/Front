@@ -49,98 +49,94 @@ export default function TryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
+    <div className="h-[calc(100vh-80px)] bg-bg flex items-center justify-center p-4">
+      <div className="w-full max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-[40px] leading-[48px] md:text-[64px] md:leading-[72px] font-[800] tracking-tight text-ink mb-4">
+        <div className="text-center mb-8">
+          <h1 className="text-[32px] leading-[40px] md:text-[48px] md:leading-[56px] font-[800] tracking-tight text-ink mb-3">
             사전평가 시작
           </h1>
-          <p className="text-[16px] md:text-[18px] leading-[24px] md:leading-[28px] text-ink opacity-70">
-            5문항으로 구성된 간단한 평가를 통해<br />
-            현재 학습 수준을 확인해보세요.
+          <p className="text-[14px] md:text-[16px] leading-[20px] md:leading-[24px] text-ink opacity-70">
+            5문항으로 구성된 간단한 평가를 통해 현재 학습 수준을 확인해보세요.
           </p>
         </div>
 
-        {/* Main Card */}
-        <Card className="text-center" padding="xl">
-          <div className="space-y-8">
-            {/* Icon */}
-            <div className="flex justify-center">
-              <div className="w-24 h-24 bg-accent border-[3px] border-ink shadow-[0_6px_0_rgba(0,0,0,1)] flex items-center justify-center">
-                <div className="text-[40px]">📝</div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <h2 className="text-[24px] font-bold text-ink">
-                  학년을 선택해주세요
-                </h2>
-                <p className="text-[14px] text-ink opacity-70">
-                  선택한 학년에 맞는 문제가 출제됩니다
-                </p>
-              </div>
-
-              <div className="flex justify-center">
-                <GradeSelector
-                  value={selectedGrade}
-                  onChange={setSelectedGrade}
-                />
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="space-y-4">
-              <Button
-                size="lg"
-                onClick={handleStartQuiz}
-                isLoading={isLoading}
-                className="w-full"
-              >
-                {isLoading ? '준비 중...' : '사전평가 시작하기'}
-              </Button>
-
-              <p className="text-[12px] text-ink opacity-60">
-                소요시간: 약 5분 | 문항 수: 5개
+        {/* Main Layout - 3열 그리드 */}
+        <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-8 items-center">
+          {/* 왼쪽 정보 카드 */}
+          <div className="lg:col-span-2">
+            <div className="text-center p-4 border-[3px] border-ink bg-bg hover:bg-soft/20 transition-colors h-full flex flex-col justify-center">
+              <div className="text-[24px] mb-2">⏱️</div>
+              <h3 className="text-[14px] font-bold text-ink mb-1">
+                빠른 평가
+              </h3>
+              <p className="text-[11px] text-ink opacity-70">
+                5분 내외로 완료
               </p>
             </div>
           </div>
-        </Card>
 
-        {/* Info Section */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: '⏱️',
-              title: '빠른 평가',
-              description: '5분 내외로 완료'
-            },
-            {
-              icon: '🎯',
-              title: '정확한 진단',
-              description: '현재 수준 파악'
-            },
-            {
-              icon: '📊',
-              title: '상세한 결과',
-              description: '개념별 분석 제공'
-            }
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="text-center p-6 border-[3px] border-ink bg-bg"
-            >
-              <div className="text-[32px] mb-3">{item.icon}</div>
-              <h3 className="text-[16px] font-bold text-ink mb-2">
-                {item.title}
+          {/* 중앙 메인 카드 */}
+          <div className="lg:col-span-6">
+            <Card className="text-center" padding="xl">
+              <div className="space-y-6">
+                {/* Icon */}
+                <div className="flex justify-center">
+                  <div className="w-20 h-20 bg-accent border-[3px] border-ink shadow-[0_6px_0_rgba(0,0,0,1)] flex items-center justify-center">
+                    <div className="text-[32px]">📝</div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <h2 className="text-[20px] font-bold text-ink">
+                      학년을 선택해주세요
+                    </h2>
+                    <p className="text-[13px] text-ink opacity-70">
+                      선택한 학년에 맞는 문제가 출제됩니다
+                    </p>
+                  </div>
+
+                  <div className="flex justify-center">
+                    <GradeSelector
+                      value={selectedGrade}
+                      onChange={setSelectedGrade}
+                    />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="space-y-3">
+                  <Button
+                    size="lg"
+                    onClick={handleStartQuiz}
+                    isLoading={isLoading}
+                    className="w-full"
+                  >
+                    {isLoading ? '준비 중...' : '사전평가 시작하기'}
+                  </Button>
+
+                  <p className="text-[11px] text-ink opacity-60">
+                    소요시간: 약 5분 | 문항 수: 5개
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* 오른쪽 정보 카드 */}
+          <div className="lg:col-span-2">
+            <div className="text-center p-4 border-[3px] border-ink bg-bg hover:bg-soft/20 transition-colors h-full flex flex-col justify-center">
+              <div className="text-[24px] mb-2">📊</div>
+              <h3 className="text-[14px] font-bold text-ink mb-1">
+                상세한 결과
               </h3>
-              <p className="text-[12px] text-ink opacity-70">
-                {item.description}
+              <p className="text-[11px] text-ink opacity-70">
+                개념별 분석 제공
               </p>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
