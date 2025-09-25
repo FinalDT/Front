@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Modal } from '@/components/ui';
 import { AnimatedQuizTimer } from './AnimatedQuizTimer';
-import { QuizQuestion, mockQuizQuestions } from '@/lib/mockData';
-import { Grade, storage, isValidGrade } from '@/lib/utils';
+import { QuizQuestion } from '@/lib/mockData';
+import { Grade, storage, processSvgImage } from '@/lib/utils';
+import { generateQuestions } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface QuizProps {
@@ -22,42 +23,44 @@ export function Quiz({ sessionId }: QuizProps) {
   const [showExitModal, setShowExitModal] = useState(false);
   const [grade, setGrade] = useState<Grade>('중2');
   const [isTimerActive, setIsTimerActive] = useState(false);
+  const [isQuestionsLoading, setIsQuestionsLoading] = useState(true);
+  const [questionsError, setQuestionsError] = useState<string | null>(null);
 
   // Load session and questions
   useEffect(() => {
-    const session = storage.get('guestSession');
-    if (!session || session.id !== sessionId) {
-      router.push('/try');
-      return;
-    }
+    const loadQuestions = async () => {
+      try {
+        const session = storage.get('guestSession');
+        if (!session || session.id !== sessionId) {
+          router.push('/try');
+          return;
+        }
 
-    setGrade(session.grade);
-    
-    // Validate grade and get questions
-    if (!isValidGrade(session.grade)) {
-      console.error(`Invalid grade: ${session.grade}`);
-      router.push('/try');
-      return;
-    }
-    
-    const questions = mockQuizQuestions[session.grade as Grade];
-    if (!questions) {
-      console.error(`No questions found for grade: ${session.grade}`);
-      router.push('/try');
-      return;
-    }
-    
-    setQuestions(questions);
+        setGrade(session.grade);
 
-    // Load existing answers if any
-    const savedAnswers = storage.get('quizAnswers');
-    if (savedAnswers) {
-      setAnswers(savedAnswers);
-      // Set current question's answer if exists
-      if (savedAnswers[currentQuestion] !== undefined) {
-        setSelectedAnswer(savedAnswers[currentQuestion]);
+        // API로 문제 생성 요청
+        const questions = await generateQuestions(session.gradeNumber, session.semester);
+        setQuestions(questions);
+
+        // Load existing answers if any
+        const savedAnswers = storage.get('quizAnswers');
+        if (savedAnswers) {
+          setAnswers(savedAnswers);
+          // Set current question's answer if exists
+          if (savedAnswers[currentQuestion] !== undefined) {
+            setSelectedAnswer(savedAnswers[currentQuestion]);
+          }
+        }
+
+        setIsQuestionsLoading(false);
+      } catch (error) {
+        console.error('문제 로딩 실패:', error);
+        setQuestionsError(error instanceof Error ? error.message : '문제를 불러오는 중 오류가 발생했습니다.');
+        setIsQuestionsLoading(false);
       }
-    }
+    };
+
+    loadQuestions();
   }, [sessionId, router]);
 
   // Update selected answer when question changes
@@ -165,12 +168,34 @@ export function Quiz({ sessionId }: QuizProps) {
     router.push('/');
   };
 
-  if (questions.length === 0) {
+  // 로딩 상태 표시
+  if (isQuestionsLoading) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 mx-auto border-[3px] border-accent border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-ink">문제를 불러오는 중...</p>
+          <p className="text-ink">문제를 생성하고 있습니다...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태 표시
+  if (questionsError) {
+    return (
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-[48px] mb-4">⚠️</div>
+          <h2 className="text-[20px] font-bold text-ink mb-2">문제 로딩 실패</h2>
+          <p className="text-[14px] text-ink opacity-70 mb-4">
+            {questionsError}
+          </p>
+          <Button
+            onClick={() => router.push('/try')}
+            variant="outline"
+          >
+            다시 시도하기
+          </Button>
         </div>
       </div>
     );
@@ -268,7 +293,7 @@ export function Quiz({ sessionId }: QuizProps) {
                   <span className="text-[14px] font-bold">Q</span>
                 </div>
                 <div className="flex-1">
-                  <h2 
+                  <h2
                     id="q-title"
                     className="text-[18px] md:text-[20px] font-medium text-ink leading-relaxed"
                   >
@@ -284,6 +309,28 @@ export function Quiz({ sessionId }: QuizProps) {
                   </div>
                 </div>
               </div>
+
+              {/* 문제 이미지 */}
+              {(question.imageSvg || question.image) && (
+                <div className="mt-6 p-4 bg-soft-light border-[3px] border-border">
+                  {question.imageSvg ? (
+                    // SVG 이미지 표시
+                    <div className="flex justify-center">
+                      <div
+                        className="max-w-full max-h-[250px] md:max-h-[350px] overflow-hidden"
+                        dangerouslySetInnerHTML={{ __html: processSvgImage(question.imageSvg, 400, 350) }}
+                        role="img"
+                        aria-label={question.imageAlt || "문제 관련 이미지"}
+                      />
+                    </div>
+                  ) : (
+                    // 기존 텍스트 형태 이미지/수식 표시 (호환성)
+                    <div className="text-[16px] md:text-[18px] font-mono text-ink text-center">
+                      {question.image}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Options */}

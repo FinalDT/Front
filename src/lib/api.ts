@@ -139,3 +139,68 @@ export function validateResponse<T>(data: unknown, validator?: (data: unknown) =
   }
   return data as T;
 }
+
+// 문제 생성 API 관련 타입들
+export interface GenerateQuestionsRequest {
+  grade: number;
+  semester: number;
+}
+
+export interface GenerateQuestionsResponse {
+  questions: QuizQuestion[];
+  success: boolean;
+  message?: string;
+}
+
+// QuizQuestion 임포트 (mockData에서)
+import { QuizQuestion } from './mockData';
+
+/**
+ * 백엔드에서 문제 생성 API 호출
+ * @param grade - 학년 (1, 2, 3)
+ * @param semester - 학기 (1, 2)
+ * @returns Promise<QuizQuestion[]>
+ */
+export async function generateQuestions(
+  grade: number,
+  semester: number
+): Promise<QuizQuestion[]> {
+  const requestBody: GenerateQuestionsRequest = {
+    grade,
+    semester,
+  };
+
+  try {
+    // TODO: 실제 백엔드 엔드포인트 URL로 변경 필요
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+    const response = await fetch(`${apiUrl}/api/questions/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+      cache: 'no-store', // 항상 최신 문제 생성
+    });
+
+    if (!response.ok) {
+      throw new Error(`문제 생성 실패: ${response.status} ${response.statusText}`);
+    }
+
+    const data: GenerateQuestionsResponse = await response.json();
+
+    if (!data.success || !data.questions) {
+      throw new Error(data.message || '문제 생성에 실패했습니다.');
+    }
+
+    // 정확히 6개의 문제가 반환되는지 확인
+    if (data.questions.length !== 6) {
+      console.warn(`Expected 6 questions, got ${data.questions.length}`);
+    }
+
+    return data.questions;
+  } catch (error) {
+    console.error('문제 생성 API 호출 중 오류:', error);
+    throw error;
+  }
+}

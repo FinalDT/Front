@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, Card } from '@/components/ui';
 import { GradeSelector } from '@/components/features/GradeSelector';
-import { Grade, generateId, storage } from '@/lib/utils';
+import { Grade, generateId, storage, gradeToNumber, getCurrentSemester } from '@/lib/utils';
 import { GuestSession } from '@/lib/mockData';
 
 export default function TryPage() {
@@ -25,10 +25,16 @@ export default function TryPage() {
     setIsLoading(true);
 
     try {
-      // Create guest session
+      // 현재 학기 계산
+      const currentSemester = getCurrentSemester();
+      const gradeNumber = gradeToNumber(selectedGrade);
+
+      // Create guest session with semester info
       const guestSession: GuestSession = {
         id: generateId(),
         grade: selectedGrade,
+        gradeNumber: gradeNumber,
+        semester: currentSemester,
         startedAt: new Date(),
         completed: false
       };
@@ -57,7 +63,7 @@ export default function TryPage() {
             사전평가 시작
           </h1>
           <p className="text-[14px] md:text-[16px] leading-[20px] md:leading-[24px] text-ink opacity-70">
-            5문항으로 구성된 간단한 평가를 통해 현재 학습 수준을 확인해보세요.
+            6문항으로 구성된 간단한 평가를 통해 현재 학습 수준을 확인해보세요.
           </p>
         </div>
 
@@ -71,7 +77,7 @@ export default function TryPage() {
                 빠른 평가
               </h3>
               <p className="text-[11px] text-ink opacity-70">
-                5분 내외로 완료
+                6분 내외로 완료
               </p>
             </div>
           </div>
@@ -118,7 +124,7 @@ export default function TryPage() {
                   </Button>
 
                   <p className="text-[11px] text-ink opacity-60">
-                    소요시간: 약 5분 | 문항 수: 5개
+                    소요시간: 약 6분 | 문항 수: 6개
                   </p>
                 </div>
               </div>

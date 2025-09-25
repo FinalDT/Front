@@ -105,3 +105,85 @@ export function shuffle<T>(array: T[]): T[] {
   }
   return shuffled;
 }
+
+// 학기 계산 로직
+export type Semester = 1 | 2;
+
+export function getCurrentSemester(date: Date = new Date()): Semester {
+  const month = date.getMonth() + 1; // 0-based to 1-based
+
+  // 3월~8월: 1학기, 9월~2월: 2학기
+  if (month >= 3 && month <= 8) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
+
+// 학년을 숫자로 변환 (백엔드 전송용)
+export function gradeToNumber(grade: Grade): number {
+  switch (grade) {
+    case '중1': return 1;
+    case '중2': return 2;
+    case '중3': return 3;
+    default: return 2;
+  }
+}
+
+// 숫자를 학년으로 변환
+export function numberToGrade(num: number): Grade {
+  switch (num) {
+    case 1: return '중1';
+    case 2: return '중2';
+    case 3: return '중3';
+    default: return '중2';
+  }
+}
+
+// SVG 이미지 보안 및 정리 함수들
+export function sanitizeSvg(svgString: string): string {
+  // 기본적인 SVG 정리 - 스크립트 태그와 이벤트 핸들러 제거
+  return svgString
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+="[^"]*"/gi, '')
+    .replace(/on\w+='[^']*'/gi, '')
+    .replace(/<iframe/gi, '<div')
+    .replace(/<\/iframe>/gi, '</div>')
+    .replace(/<object/gi, '<div')
+    .replace(/<\/object>/gi, '</div>');
+}
+
+// SVG 크기 정규화 함수
+export function normalizeSvgSize(svgString: string, maxWidth: number = 500, maxHeight: number = 400): string {
+  // SVG에 viewBox와 크기 제한 추가
+  if (svgString.includes('<svg')) {
+    let normalizedSvg = svgString;
+
+    // 기존 width, height 속성 제거
+    normalizedSvg = normalizedSvg.replace(/\s+width="[^"]*"/gi, '');
+    normalizedSvg = normalizedSvg.replace(/\s+height="[^"]*"/gi, '');
+
+    // 새로운 크기 제한 추가
+    normalizedSvg = normalizedSvg.replace(
+      /<svg/i,
+      `<svg width="100%" height="100%" style="max-width:${maxWidth}px;max-height:${maxHeight}px;"`
+    );
+
+    return normalizedSvg;
+  }
+
+  return svgString;
+}
+
+// SVG 이미지 전체 처리 함수 (보안 + 정규화)
+export function processSvgImage(svgString: string, maxWidth?: number, maxHeight?: number): string {
+  if (!svgString || typeof svgString !== 'string') {
+    return '';
+  }
+
+  const sanitized = sanitizeSvg(svgString);
+  const normalized = normalizeSvgSize(sanitized, maxWidth, maxHeight);
+
+  return normalized;
+}

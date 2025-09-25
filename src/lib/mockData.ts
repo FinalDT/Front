@@ -9,7 +9,9 @@ export interface QuizQuestion {
   concept: string;
   difficulty: 'easy' | 'medium' | 'hard';
   type?: '객관식' | '주관식' | '서술형';
-  image?: string;
+  image?: string; // 기존 이미지 URL 지원 (호환성)
+  imageSvg?: string; // SVG 이미지 문자열 (백엔드에서 전송)
+  imageAlt?: string; // 이미지 대체 텍스트 (접근성)
   hint?: string;
   isCorrect?: boolean;
   timestamp?: Date | string;
@@ -77,11 +79,24 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
     },
     {
       id: '1-6',
-      question: '2⁴의 값은?',
-      options: ['8', '16', '32', '64'],
+      question: '아래 도형의 넓이는?',
+      options: ['12cm²', '16cm²', '20cm²', '24cm²'],
       correctAnswer: 1,
-      concept: '거듭제곱',
-      difficulty: 'easy'
+      concept: '평면도형',
+      difficulty: 'easy',
+      imageSvg: `<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="80" height="60" fill="#FFB3F0" stroke="#000" stroke-width="2"/>
+        <text x="60" y="55" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">4cm</text>
+        <text x="10" y="55" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" transform="rotate(-90 10 55)">4cm</text>
+        <line x1="20" y1="15" x2="100" y2="15" stroke="#000" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="15" y1="20" x2="15" y2="80" stroke="#000" stroke-width="1" marker-end="url(#arrow)"/>
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+            <polygon points="0 0, 10 3, 0 6" fill="#000"/>
+          </marker>
+        </defs>
+      </svg>`,
+      imageAlt: "가로 4cm, 세로 4cm인 정사각형"
     }
   ],
   '중2': [
@@ -127,11 +142,38 @@ export const mockQuizQuestions: Record<Grade, QuizQuestion[]> = {
     },
     {
       id: '2-6',
-      question: '연립방정식 { x + y = 5, x - y = 1 }의 해는?',
-      options: ['x=3, y=2', 'x=2, y=3', 'x=4, y=1', 'x=1, y=4'],
+      question: '다음 그래프의 일차함수 식은?',
+      options: ['y = 2x + 1', 'y = -2x + 1', 'y = x + 2', 'y = -x + 2'],
       correctAnswer: 0,
-      concept: '연립방정식',
-      difficulty: 'medium'
+      concept: '일차함수',
+      difficulty: 'medium',
+      imageSvg: `<svg viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+          </marker>
+        </defs>
+        <!-- 좌표축 -->
+        <line x1="20" y1="140" x2="220" y2="140" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <line x1="120" y1="20" x2="120" y2="160" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <!-- 그리드 -->
+        <g stroke="#ddd" stroke-width="1">
+          <line x1="70" y1="25" x2="70" y2="155"/>
+          <line x1="170" y1="25" x2="170" y2="155"/>
+          <line x1="25" y1="90" x2="215" y2="90"/>
+          <line x1="25" y1="40" x2="215" y2="40"/>
+        </g>
+        <!-- 일차함수 선 y = 2x + 1 -->
+        <line x1="45" y1="115" x2="195" y2="15" stroke="#FF90E8" stroke-width="3"/>
+        <!-- 점 표시 -->
+        <circle cx="70" cy="90" r="3" fill="#FF90E8"/>
+        <circle cx="170" cy="40" r="3" fill="#FF90E8"/>
+        <!-- 좌표 라벨 -->
+        <text x="225" y="145" font-family="Arial" font-size="12" font-weight="bold">x</text>
+        <text x="125" y="15" font-family="Arial" font-size="12" font-weight="bold">y</text>
+        <text x="115" y="155" font-family="Arial" font-size="10">O</text>
+      </svg>`,
+      imageAlt: "좌표평면 위의 일차함수 그래프"
     }
   ],
   '중3': [
@@ -240,6 +282,8 @@ export function generateMockResult(answers: number[], grade: Grade): QuizResult 
 export interface GuestSession {
   id: string;
   grade: Grade;
+  gradeNumber: number;
+  semester: 1 | 2;
   startedAt: Date;
   answers?: number[];
   completed: boolean;

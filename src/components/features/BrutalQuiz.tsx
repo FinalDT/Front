@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Modal } from '@/components/ui';
 import { AnimatedQuizTimer } from './AnimatedQuizTimer';
-import { QuizQuestion, mockQuizQuestions } from '@/lib/mockData';
-import { Grade, storage, isValidGrade } from '@/lib/utils';
+import { QuizQuestion } from '@/lib/mockData';
+import { Grade, storage, processSvgImage } from '@/lib/utils';
+import { generateQuestions } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { transformQuizDataForBackend, sendQuizDataToBackend } from '@/lib/backendUtils';
 
@@ -161,6 +162,8 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
   const [hearts, setHearts] = useState(5);
   const [showHint, setShowHint] = useState(false);
   const [autoAdvanceTimeout, setAutoAdvanceTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [isQuestionsLoading, setIsQuestionsLoading] = useState(true);
+  const [questionsError, setQuestionsError] = useState<string | null>(null);
   // 시간 측정 관련 상태
   const [questionStartTime, setQuestionStartTime] = useState<Date | null>(null);
   const [questionTimes, setQuestionTimes] = useState<number[]>([]);
@@ -168,43 +171,43 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
 
   // Load session and questions
   useEffect(() => {
-    const session = storage.get('guestSession');
-    if (!session || session.id !== sessionId) {
-      router.push('/try');
-      return;
-    }
+    const loadQuestions = async () => {
+      try {
+        const session = storage.get('guestSession');
+        if (!session || session.id !== sessionId) {
+          router.push('/try');
+          return;
+        }
 
-    setGrade(session.grade);
-    
-    // Validate grade and get questions
-    if (!isValidGrade(session.grade)) {
-      console.error(`Invalid grade: ${session.grade}`);
-      router.push('/try');
-      return;
-    }
-    
-    const questions = mockQuizQuestions[session.grade as Grade];
-    if (!questions) {
-      console.error(`No questions found for grade: ${session.grade}`);
-      router.push('/try');
-      return;
-    }
-    
-    setQuestions(questions);
+        setGrade(session.grade);
 
-    // Load existing state
-    const savedAnswers = storage.get('quizAnswers');
-    const savedStreak = storage.get('quizStreak') || 0;
-    const savedHearts = storage.get('quizHearts') || 5;
-    
-    if (savedAnswers) {
-      setAnswers(savedAnswers);
-      if (savedAnswers[currentQuestion] !== undefined) {
-        setSelectedAnswer(savedAnswers[currentQuestion]);
+        // API로 문제 생성 요청
+        const questions = await generateQuestions(session.gradeNumber, session.semester);
+        setQuestions(questions);
+
+        // Load existing state
+        const savedAnswers = storage.get('quizAnswers');
+        const savedStreak = storage.get('quizStreak') || 0;
+        const savedHearts = storage.get('quizHearts') || 5;
+
+        if (savedAnswers) {
+          setAnswers(savedAnswers);
+          if (savedAnswers[currentQuestion] !== undefined) {
+            setSelectedAnswer(savedAnswers[currentQuestion]);
+          }
+        }
+        setStreak(savedStreak);
+        setHearts(savedHearts);
+
+        setIsQuestionsLoading(false);
+      } catch (error) {
+        console.error('문제 로딩 실패:', error);
+        setQuestionsError(error instanceof Error ? error.message : '문제를 불러오는 중 오류가 발생했습니다.');
+        setIsQuestionsLoading(false);
       }
-    }
-    setStreak(savedStreak);
-    setHearts(savedHearts);
+    };
+
+    loadQuestions();
   }, [sessionId, router, currentQuestion]);
 
   // Activate timer when question loads
@@ -227,6 +230,48 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [showFeedback]);
+
+  // 로딩 상태 표시
+  if (isQuestionsLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="w-24 h-24 mx-auto bg-[#FF90E8] border-4 border-black
+                         flex items-center justify-center
+                         shadow-[8px_8px_0px_0px_#000] rotate-12 animate-bounce">
+            <span className="text-4xl">💥</span>
+          </div>
+          <div className="space-y-2">
+            <p className="text-2xl font-black text-black uppercase">브루탈 퀴즈 생성 중...</p>
+            <p className="text-lg text-black font-bold">AI가 당신만을 위한 문제를 만들고 있어요! 🚀</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태 표시
+  if (questionsError) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <div className="text-8xl mb-6">😱</div>
+          <h2 className="text-4xl font-black text-red-500 mb-4 uppercase">문제 로딩 실패!</h2>
+          <p className="text-lg text-black font-bold mb-8">
+            {questionsError}
+          </p>
+          <Button
+            onClick={() => router.push('/try')}
+            variant="primary"
+            size="lg"
+            className="font-black uppercase"
+          >
+            다시 시도하기 💪
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const question = questions[currentQuestion];
   if (!question) return null;
@@ -474,12 +519,25 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
                   </h2>
 
                   {/* 문제 이미지/수식 */}
-                  {question.image && (
+                  {(question.imageSvg || question.image) && (
                     <div className="mb-4 lg:mb-6 p-4 lg:p-6 bg-[#E5F9F3] border-4 border-black
                                    shadow-[6px_6px_0px_0px_#000] rotate-1">
-                      <div className="text-lg lg:text-xl font-mono text-black font-bold">
-                        {question.image}
-                      </div>
+                      {question.imageSvg ? (
+                        // SVG 이미지 표시
+                        <div className="flex justify-center">
+                          <div
+                            className="max-w-full max-h-[300px] lg:max-h-[400px] overflow-hidden"
+                            dangerouslySetInnerHTML={{ __html: processSvgImage(question.imageSvg, 500, 400) }}
+                            role="img"
+                            aria-label={question.imageAlt || "문제 관련 이미지"}
+                          />
+                        </div>
+                      ) : (
+                        // 기존 텍스트 형태 이미지/수식 표시 (호환성)
+                        <div className="text-lg lg:text-xl font-mono text-black font-bold text-center">
+                          {question.image}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
