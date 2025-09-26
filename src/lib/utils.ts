@@ -187,3 +187,105 @@ export function processSvgImage(svgString: string, maxWidth?: number, maxHeight?
 
   return normalized;
 }
+
+// ML/Fabric 대시보드용 데이터 변환 유틸리티
+
+// 블롭 스토리지용 데이터 인터페이스
+export interface BlobStorageData {
+  learnerID: string;
+  learnerProfile: string;
+  testID: string;
+  assessmentItemID: string;
+  answerCode: string;
+  Timestamp: string;
+}
+
+// 사용자 답변 데이터 인터페이스
+export interface UserAnswer {
+  questionId: string;
+  selectedAnswer: number;
+  isCorrect: boolean;
+  answeredAt: Date;
+}
+
+// 학년을 국제식 학년으로 변환 (중1=7, 중2=8, 중3=9)
+export function gradeToInternationalGrade(grade: Grade): number {
+  switch (grade) {
+    case '중1': return 7;
+    case '중2': return 8;
+    case '중3': return 9;
+    default: return 8;
+  }
+}
+
+// learnerID 생성 (학년별로 A07, A08, A09로 시작)
+export function generateLearnerID(grade: Grade): string {
+  const internationalGrade = gradeToInternationalGrade(grade);
+  return `A${internationalGrade.toString().padStart(2, '0')}0000586`;
+}
+
+// testID 생성 (자동 생성)
+export function generateTestID(): string {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 8);
+  return `T${timestamp}${random}`.toUpperCase();
+}
+
+// learnerProfile 생성 (F;S01;{국제학년})
+export function generateLearnerProfile(grade: Grade): string {
+  const internationalGrade = gradeToInternationalGrade(grade);
+  return `F;S01;${internationalGrade}`;
+}
+
+// Timestamp를 블롭 스토리지 형식으로 변환
+export function formatTimestampForBlob(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+// 단일 사용자 답변을 블롭 스토리지 형식으로 변환
+export function convertAnswerToBlobData(
+  userAnswer: UserAnswer,
+  grade: Grade,
+  testID: string
+): BlobStorageData {
+  return {
+    learnerID: generateLearnerID(grade),
+    learnerProfile: generateLearnerProfile(grade),
+    testID: testID,
+    assessmentItemID: userAnswer.questionId,
+    answerCode: userAnswer.isCorrect ? "1" : "0",
+    Timestamp: formatTimestampForBlob(userAnswer.answeredAt)
+  };
+}
+
+// 퀴즈 결과 전체를 블롭 스토리지 형식으로 변환
+export function convertQuizResultsToBlobData(
+  answers: UserAnswer[],
+  grade: Grade
+): BlobStorageData[] {
+  const testID = generateTestID();
+
+  return answers.map(answer =>
+    convertAnswerToBlobData(answer, grade, testID)
+  );
+}
+
+// 블롭 스토리지 데이터를 콘솔에 출력 (개발용)
+export function logBlobData(blobData: BlobStorageData[], label?: string): void {
+  if (typeof window === 'undefined') return;
+
+  console.group(`🔄 ${label || 'Blob Storage Data'}`);
+  console.table(blobData);
+  console.log('📋 Raw JSON:');
+  blobData.forEach((item, index) => {
+    console.log(`[${index + 1}]`, JSON.stringify(item, null, 2));
+  });
+  console.groupEnd();
+}

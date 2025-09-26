@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Modal } from '@/components/ui';
 import { AnimatedQuizTimer } from './AnimatedQuizTimer';
 import { QuizQuestion } from '@/lib/mockData';
-import { Grade, storage, processSvgImage } from '@/lib/utils';
+import { Grade, storage, processSvgImage, UserAnswer, convertQuizResultsToBlobData, logBlobData } from '@/lib/utils';
 import { generateQuestions } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { transformQuizDataForBackend, sendQuizDataToBackend } from '@/lib/backendUtils';
@@ -386,6 +386,32 @@ export function BrutalQuiz({ sessionId }: BrutalQuizProps) {
         } catch (error) {
           console.error('❌ Failed to send quiz data to backend:', error);
           // Continue even if backend fails
+        }
+
+        // Convert and log data for ML/Fabric dashboard (Blob Storage format)
+        try {
+          // Convert answers to UserAnswer format
+          const userAnswers: UserAnswer[] = answers.map((selectedAnswer, index) => {
+            const question = questions[index];
+            if (!question) return null;
+
+            return {
+              questionId: question.id,
+              selectedAnswer: selectedAnswer,
+              isCorrect: selectedAnswer === question.correctAnswer,
+              answeredAt: answerTimestamps[index] || new Date()
+            };
+          }).filter((answer): answer is UserAnswer => answer !== null);
+
+          // Convert to blob storage format
+          const blobData = convertQuizResultsToBlobData(userAnswers, grade);
+
+          // Log to console for verification
+          logBlobData(blobData, `Quiz Results for Grade ${grade}`);
+
+          console.log('🔄 ML/Fabric Dashboard Data Ready:', blobData.length, 'records generated');
+        } catch (error) {
+          console.error('❌ Failed to convert quiz data to blob format:', error);
         }
 
         router.push(`/results-teaser?session=${sessionId}`);
