@@ -55,7 +55,21 @@ export function Quiz({ sessionId }: QuizProps) {
         setIsQuestionsLoading(false);
       } catch (error) {
         console.error('문제 로딩 실패:', error);
-        setQuestionsError(error instanceof Error ? error.message : '문제를 불러오는 중 오류가 발생했습니다.');
+        
+        // API 호출 실패 시 더 구체적인 에러 메시지 제공
+        let errorMessage = '문제를 불러오는 중 오류가 발생했습니다.';
+        
+        if (error instanceof Error) {
+          if (error.message.includes('문제 생성 실패')) {
+            errorMessage = '서버에서 문제를 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+          } else if (error.message.includes('fetch')) {
+            errorMessage = '서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.';
+          } else {
+            errorMessage = error.message;
+          }
+        }
+        
+        setQuestionsError(errorMessage);
         setIsQuestionsLoading(false);
       }
     };
@@ -187,15 +201,29 @@ export function Quiz({ sessionId }: QuizProps) {
         <div className="text-center max-w-md mx-auto p-6">
           <div className="text-[48px] mb-4">⚠️</div>
           <h2 className="text-[20px] font-bold text-ink mb-2">문제 로딩 실패</h2>
-          <p className="text-[14px] text-ink opacity-70 mb-4">
+          <p className="text-[14px] text-ink opacity-70 mb-6">
             {questionsError}
           </p>
-          <Button
-            onClick={() => router.push('/try')}
-            variant="outline"
-          >
-            다시 시도하기
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={() => {
+                setQuestionsError(null);
+                setIsQuestionsLoading(true);
+                // 페이지 새로고침으로 재시도
+                window.location.reload();
+              }}
+              className="w-full"
+            >
+              다시 시도하기
+            </Button>
+            <Button
+              onClick={() => router.push('/try')}
+              variant="outline"
+              className="w-full"
+            >
+              처음부터 다시 시작
+            </Button>
+          </div>
         </div>
       </div>
     );

@@ -1,36 +1,698 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# STUDIYA - AI 수학 학습 플랫폼
 
-## Getting Started
+**중학생을 위한 개인화 AI 수학 튜터링 웹 애플리케이션**
 
-First, run the development server:
+![Preview](https://github.com/user-attachments/assets/preview-image.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📖 프로젝트 개요
+
+STUDIYA는 중학생을 대상으로 한 개인화 AI 수학 학습 플랫폼입니다. 사전평가를 통해 학습자의 수준을 파악하고, AI 튜터와의 대화를 통해 맞춤형 학습 경험을 제공합니다.
+
+### 🎯 타겟 사용자
+- **주 타겟**: 중학교 1~3학년 학생 (13-16세)
+- **보조 타겟**: 학생의 학부모, 수학 교사
+- **사용 시나리오**: 자기주도 학습, 보충 학습, 예습/복습
+
+### ✨ 핵심 기능
+- **5분 사전평가**: 6문항으로 구성된 간단한 평가로 학습자 수준 파악
+- **개인화 컨텍스트**: 최근 6문항 분석 기반 맞춤 학습 경로 제공
+- **AI 튜터 대화**: 자연스러운 채팅으로 수학 개념 설명 및 질의응답
+- **정직한 피드백**: 구체적이고 솔직한 학습 가이드 제공
+
+### 🚀 서비스 플로우
+```
+홈페이지 → 사전평가 시작 → 퀴즈 진행 → 결과 확인 → AI 튜터 대화 → 학습 분석
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 빠른 시작
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 개발 환경 실행
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# 의존성 설치
+npm install
 
-## Learn More
+# 개발 서버 시작
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+브라우저에서 [http://localhost:3000](http://localhost:3000)으로 접속하세요.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 프로덕션 빌드
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# 프로덕션 빌드 생성
+npm run build
 
-## Deploy on Vercel
+# 프로덕션 서버 시작
+npm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗️ 기술 스택
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 핵심 기술
+- **Next.js 15.5.3** - React 기반 풀스택 프레임워크 (App Router 사용)
+- **TypeScript** - 타입 안전성을 위한 정적 타입 언어
+- **React 19.1.0** - UI 라이브러리
+- **Tailwind CSS 4** - 유틸리티 우선 CSS 프레임워크
+
+### 주요 라이브러리
+- **Framer Motion** - 애니메이션 및 인터랙션
+- **clsx** - 조건부 클래스명 관리
+
+### 개발 도구
+- **ESLint** - 코드 품질 관리
+- **PostCSS** - CSS 후처리
+
+## 📁 프로젝트 구조
+
+```
+src/
+├── app/                    # Next.js App Router 페이지
+│   ├── auth/              # 로그인 페이지
+│   ├── dashboard/         # 대시보드 (로그인 후)
+│   ├── context/           # 학습 분석 페이지
+│   ├── quiz/             # 퀴즈 페이지
+│   ├── tutor/            # AI 튜터 채팅
+│   ├── try/              # 사전평가 시작 페이지
+│   └── settings/         # 설정 페이지
+├── components/           # 재사용 가능한 컴포넌트
+│   ├── ui/              # 기본 UI 컴포넌트
+│   │   ├── Button.tsx   # 버튼 컴포넌트
+│   │   ├── Card.tsx     # 카드 컴포넌트
+│   │   ├── Input.tsx    # 입력 컴포넌트
+│   │   └── Modal.tsx    # 모달 컴포넌트
+│   ├── layout/          # 레이아웃 컴포넌트
+│   │   ├── Layout.tsx   # 메인 레이아웃
+│   │   ├── Header.tsx   # 헤더
+│   │   └── TabBar.tsx   # 하단 탭바 (모바일)
+│   └── features/        # 기능별 컴포넌트
+│       ├── HomePage.tsx     # 홈페이지 메인
+│       ├── BrutalQuiz.tsx   # 퀴즈 컴포넌트
+│       ├── ChatBubble.tsx   # 채팅 말풍선
+│       └── GradeSelector.tsx # 학년 선택기
+└── lib/                 # 유틸리티 및 설정
+    ├── utils.ts         # 공통 유틸리티 함수
+    ├── mockData.ts      # 목업 데이터
+    └── api.ts           # API 함수들
+```
+
+## 🖥️ 주요 화면 구성 & 사용자 여정
+
+### 🏠 1. 홈페이지 (`/`)
+**첫인상을 결정하는 랜딩 페이지**
+- **파일**: `src/app/page.tsx`
+- **디자인 목적**: 서비스 가치 전달 및 사용자 유입
+- **주요 섹션**:
+  - 🎯 **히어로**: 메인 캐치프레이즈 + 브랜드 캐릭터
+  - ⭐ **기능 소개**: 3개 핵심 기능 카드 (개인화/AI튜터/피드백)
+  - 💬 **사용자 후기**: 3개 학습자 후기 + 별점
+  - 🚀 **CTA 섹션**: 사전평가 시작 버튼
+
+**📱 화면별 레이아웃**:
+- **모바일**: 세로 스택, 중앙 정렬
+- **데스크톱**: 좌우 분할 (텍스트 + 일러스트)
+
+### ✅ 2. 사전평가 시작 (`/try`)
+**학년 선택 및 평가 준비 단계**
+- **파일**: `src/app/try/page.tsx`
+- **디자인 목적**: 부담 없는 시작을 위한 간단한 인터페이스
+- **UI 구성**:
+  - 📝 **중앙 카드**: 학년 선택기 + 시작 버튼
+  - ⏱️ **좌측 정보**: "6분 내외 완료" 안내
+  - 📊 **우측 정보**: "상세 결과 제공" 안내
+
+**🎨 디자인 포인트**:
+- 3열 그리드 레이아웃으로 시각적 균형
+- 학년 버튼은 클릭하기 쉬운 큰 크기
+
+### 🎮 3. 퀴즈 페이지 (`/quiz`)
+**집중력을 높이는 문제 풀이 환경**
+- **파일**: `src/app/quiz/page.tsx`
+- **디자인 목적**: 몰입감 있는 학습 경험
+- **브루탈 디자인 특징**:
+  - 🎯 **강렬한 색상**: 핑크 (#FF90E8) + 검은색 테두리
+  - ⏱️ **타이머**: 상단 진행률 바 + 남은 시간
+  - 💥 **인터랙션**: 클릭 시 그림자 애니메이션
+
+**📱 반응형 고려사항**:
+- 모바일: 세로 중심, 터치하기 쉬운 버튼 크기
+- 데스크톱: 좌우 여백으로 집중도 향상
+
+### 🔐 4. 로그인 페이지 (`/auth`)
+**간편한 체험 시작**
+- **파일**: `src/app/auth/page.tsx`
+- **디자인 목적**: 진입 장벽 최소화
+- **UI 특징**:
+  - 🎯 **원클릭 로그인**: "한 번 눌러 로그인" CTA
+  - 📱 **데모 기능 소개**: 4개 아이콘으로 기능 미리보기
+  - 👆 **대안 경로**: 게스트 계속 사용 버튼
+
+### 🏡 5. 대시보드 (`/dashboard`)
+**개인화된 학습 허브**
+- **파일**: `src/app/dashboard/page.tsx`
+- **디자인 목적**: 학습 동기 부여 및 편의성
+- **레이아웃 구성**:
+  - 👋 **인사말 섹션**: 시간별 인사 + 사용자명
+  - 📊 **통계 그리드**: 4개 핵심 지표 (총 문제/정답률/연속정답/학습시간)
+  - 🎯 **학습 분석**: 최근 6문항 분석 결과
+  - 🤖 **AI 튜터 카드**: 추천 질문 + 바로가기
+
+**🎨 시각적 요소**:
+- 그래디언트 배경으로 깊이감
+- 호버 애니메이션으로 인터랙티브함
+
+### 💬 6. AI 튜터 (`/tutor`)
+**자연스러운 학습 대화**
+- **파일**: `src/app/tutor/page.tsx`
+- **디자인 목적**: 편안한 대화 환경 조성
+- **채팅 UI 특징**:
+  - 💭 **말풍선**: 사용자(우측) vs AI(좌측) 구분
+  - ⚡ **실시간 응답**: 타이핑 인디케이터 + 스트리밍 효과
+  - 🎯 **빠른 액션**: 추천 질문 버튼들
+  - 📊 **학습 현황**: 접었다 펼 수 있는 컨텍스트 정보
+
+**📱 모바일 vs 데스크톱**:
+- 모바일: 전체 화면, 하단 고정 입력창
+- 데스크톱: 우측 사이드바 + 추천 액션
+
+### 📈 7. 학습 분석 (`/context`)
+**데이터 기반 학습 인사이트**
+- **파일**: `src/app/context/page.tsx`
+- **디자인 목적**: 학습 패턴 시각화 및 개선점 제시
+- **정보 구성**:
+  - 📊 **성과 요약**: 정답률, 취약점, 강점 영역
+  - 🔍 **상세 분석**: 최근 6문항 개별 결과
+  - 📝 **JSON 뷰어**: 개발자/교사용 상세 데이터
+
+## 📱 디바이스별 UX 전략
+
+### 모바일 (375px~768px)
+- **우선순위**: 터치 친화적, 세로 스크롤 최적화
+- **레이아웃**: 단일 컬럼, 하단 네비게이션
+- **인터랙션**: 큰 터치 영역, 스와이프 지원
+
+### 태블릿 (768px~1024px)
+- **우선순위**: 정보 밀도와 가독성 균형
+- **레이아웃**: 2컬럼 그리드, 상단 헤더
+- **인터랙션**: 터치 + 키보드 하이브리드
+
+### 데스크톱 (1024px+)
+- **우선순위**: 정보 효율성, 멀티태스킹
+- **레이아웃**: 3컬럼, 사이드바 활용
+- **인터랙션**: 마우스 호버, 키보드 단축키
+
+## 🎨 디자인 시스템 & 브랜딩
+
+### 🎯 브랜드 아이덴티티
+**"정직한 튜터, 솔직한 피드백"**
+- **브랜드 성격**: 친근하지만 진솔한, 에너지 넘치는
+- **톤앤매너**: 직설적이지만 따뜻한, 격려하는
+- **시각적 컨셉**: Neo-Brutal (신브루털리즘)
+
+### 🎨 컬러 팔레트
+```css
+/* Primary Colors */
+--accent: #FF90E8;      /* 메인 핑크 - CTA, 강조점 */
+--accent-light: #FFB3F0; /* 밝은 핑크 - 호버, 보조 */
+--bg: #F4F4F0;          /* 크림 배경 - 메인 배경 */
+--ink: #0B0B0B;         /* 거의 검정 - 텍스트, 테두리 */
+
+/* Secondary Colors */
+--soft: #E8E8E0;        /* 연한 베이지 - 카드 배경 */
+--soft-light: #F0F0EC;  /* 더 연한 베이지 - 서브 카드 */
+
+/* Status Colors */
+--success: #22C55E;     /* 성공 - 정답, 완료 */
+--error: #EF4444;       /* 오류 - 오답, 경고 */
+--warning: #F59E0B;     /* 주의 - 중간, 보류 */
+--info: #3B82F6;        /* 정보 - 안내, 팁 */
+```
+
+### ✨ Neo-Brutal 디자인 특징
+**"충격적이지만 친근한" 시각 언어**
+
+#### 📦 카드 (`.brutal-card`)
+- **테두리**: 3-4px 검은색 실선
+- **그림자**: `8px 8px 0px 0px #000` (우하단)
+- **모서리**: 직각 또는 약간 둥글게
+- **배경**: 단색, 그래디언트 금지
+
+#### 🔘 버튼 (`.brutal-button`)
+- **기본상태**: 3px 테두리 + 6px 그림자
+- **호버**: 그림자 축소 (4px 4px) + 위치 이동
+- **액티브**: 그림자 최소 (2px 2px)
+- **애니메이션**: `transition: all 75ms ease`
+
+#### 🏷️ 배지 (`.brutal-badge`)
+- **크기**: 작고 컴팩트
+- **테두리**: 2px 검은색
+- **내부**: 충분한 패딩 (px-3 py-1)
+
+### 🔤 타이포그래피
+**가독성과 임팩트의 균형**
+
+```css
+/* Heading Hierarchy */
+h1: 48px-72px, font-weight: 800  /* 메인 타이틀 */
+h2: 40px-56px, font-weight: 800  /* 섹션 제목 */
+h3: 24px-32px, font-weight: 700  /* 카드 제목 */
+h4: 18px-20px, font-weight: 600  /* 서브 제목 */
+
+/* Body Text */
+body: 16px-18px, font-weight: 400  /* 일반 텍스트 */
+small: 12px-14px, font-weight: 500 /* 캡션, 라벨 */
+```
+
+### 📐 레이아웃 시스템
+**정보 계층을 명확히 하는 그리드**
+
+#### 🏠 컨테이너
+- **최대 너비**: 1280px (7xl)
+- **패딩**: 모바일 16px, 데스크톱 48px
+- **중앙 정렬**: `mx-auto`
+
+#### 📱 반응형 브레이크포인트
+```css
+sm: 640px   /* 모바일 가로 */
+md: 768px   /* 태블릿 세로 */
+lg: 1024px  /* 태블릿 가로, 작은 데스크톱 */
+xl: 1280px  /* 일반 데스크톱 */
+2xl: 1536px /* 큰 데스크톱 */
+```
+
+### 🎭 애니메이션 & 인터랙션
+**부드럽지만 눈에 띄는 움직임**
+
+#### ⚡ 마이크로 애니메이션
+- **호버**: `hover:transform hover:-translate-y-1`
+- **클릭**: `active:transform active:translate-x-1 active:translate-y-1`
+- **로딩**: `animate-pulse`, `animate-bounce`
+
+#### 🌊 페이지 전환
+- **페이드인**: `opacity 0 → 1` (300ms)
+- **슬라이드업**: `translateY(20px) → 0` (300ms)
+- **스태거**: 요소별 100ms 딜레이
+
+### 🧩 컴포넌트 라이브러리
+**재사용 가능한 UI 요소들**
+
+#### 📚 기본 컴포넌트 (`src/components/ui/`)
+- **Button**: 5가지 사이즈, 3가지 스타일
+- **Card**: 패딩 옵션, 호버 효과
+- **Input**: 포커스 스타일, 에러 상태
+- **Modal**: 배경 블러, 중앙 배치
+- **Badge**: 색상별 변형, 사이즈 옵션
+
+#### 🎯 기능 컴포넌트 (`src/components/features/`)
+- **ChatBubble**: 좌우 구분, 타이핑 효과
+- **QuizTimer**: 진행률 바, 카운트다운
+- **GradeSelector**: 3개 옵션, 선택 상태
+
+### 🖼️ 이미지 & 아이콘 가이드
+**일관된 비주얼 언어**
+
+#### 📷 이미지 스타일
+- **비율**: 16:9 (히어로), 1:1 (아바타), 4:3 (카드)
+- **품질**: WebP 형식, 90% 품질
+- **로딩**: `priority` 속성, lazy loading
+
+#### 🎨 일러스트레이션
+- **브랜드 캐릭터**: 친근한 수학 도우미
+- **아이콘**: 이모지 우선, SVG 보조
+- **색상**: 브랜드 컬러 매칭
+
+## 🔧 디자이너를 위한 개발 가이드
+
+### 🎨 디자인 수정 워크플로
+1. **Figma/Sketch**에서 디자인 수정
+2. **CSS 변수** 또는 **Tailwind 클래스** 확인
+3. **컴포넌트 파일** 위치 파악
+4. **개발팀과 협업** 또는 직접 수정
+
+### 📝 CSS 커스터마이징
+**주요 스타일 파일들**
+- `src/app/globals.css`: 전역 CSS 변수 및 브루탈 클래스
+- `tailwind.config.js`: Tailwind 커스텀 설정
+- 각 컴포넌트의 `className` props
+
+### 🎯 디자인 리뷰 체크리스트
+- [ ] 브랜드 컬러 일관성
+- [ ] 모바일 반응형 동작
+- [ ] 접근성 (색상 대비, 폰트 크기)
+- [ ] 호버/터치 상태 정의
+- [ ] 로딩/에러 상태 디자인
+- [ ] 다국어 대응 (텍스트 길이 변화)
+
+### 🤝 개발팀과의 소통
+**디자인 피드백 시 포함할 내용**
+1. **화면 이름** (예: 홈페이지, 대시보드)
+2. **디바이스** (모바일/태블릿/데스크톱)
+3. **구체적인 위치** (헤더, 카드 섹션 등)
+4. **변경 사항** (색상, 크기, 배치 등)
+5. **우선순위** (긴급/일반/제안)
+
+## 🔧 개발 가이드
+
+### 컴포넌트 작성 규칙
+1. **TypeScript** 사용 필수
+2. **Tailwind CSS** 스타일링
+3. **클라이언트 컴포넌트**는 `'use client'` 지시자 추가
+4. **동적 로딩** 적용 (무거운 컴포넌트)
+
+### 상태 관리
+- **로컬스토리지**: 사용자 데이터, 퀴즈 결과
+- **세션 관리**: `src/lib/utils.ts`의 `session` 객체
+- **React 상태**: 페이지별 로컬 상태
+
+### API 통합 준비
+- **백엔드 유틸리티**: `src/lib/backendUtils.ts`
+- **API 함수**: `src/lib/api.ts`
+- **목업 데이터**: `src/lib/mockData.ts` (개발용)
+
+## 🔌 백엔드 API 연동
+
+### 📡 API 엔드포인트
+
+#### 문제 생성 API
+- **URL**: `http://localhost:7071/api/create_by_view_rag_personalized`
+- **Method**: `POST`
+- **Query Parameters**: `grade` (학년: 1, 2, 3)
+- **Content-Type**: `application/json`
+
+**요청 예시**:
+```javascript
+fetch('http://localhost:7071/api/create_by_view_rag_personalized?grade=2', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
+```
+
+**응답 구조**:
+```typescript
+{
+  "success": boolean;
+  "message"?: string;
+  "generated_questions": Question[];
+  "total_generated": number;
+  "concepts_used": number;
+  "grade_info": {
+    "korean_grade": number;        // 한국식 학년 (1, 2, 3)
+    "international_grade": number; // 국제식 학년 (7, 8, 9)
+    "grade_description": string;   // 학년 설명
+  };
+  "retrieval_strategy"?: string;
+  "target_accuracy_range"?: string;
+  "validation"?: {
+    "validation_passed": boolean;
+    "validation_errors"?: string[];
+  };
+  "status_code"?: number;
+}
+```
+
+**Question 객체 구조**:
+```typescript
+{
+  "assessmentItemID": string;    // 문제 ID
+  "concept_name": string;        // 개념명
+  "question_text": string;       // 문제 내용
+  "choices": string[];           // 선택지 (4개)
+  "answer": string;              // 정답 (①, ②, ③, ④)
+  "explanation": string;         // 해설
+  "svg_content": string | null;  // SVG 그림 (도형 문제시)
+  "skip": boolean;               // 건너뛰기 여부
+  "id": string;                  // 문제 ID (중복)
+  "metadata": {
+    "grade": number;             // 학년 (7=중1, 8=중2, 9=중3)
+    "term": string;              // 학기 ("1학기", "2학기")
+    "concept_name": string;      // 개념명
+    "chapter_name": string;      // 단원명
+    "difficulty_band": string;   // 난이도 (상/중/하)
+    "knowledge_tag": string;     // 지식 태그
+    "unit_name": string;         // 단원명
+  }
+}
+```
+
+### 🔄 데이터 변환 로직
+
+API 응답을 기존 `QuizQuestion` 형태로 변환하는 과정:
+
+1. **정답 변환**: `①, ②, ③, ④` → `0, 1, 2, 3` (인덱스)
+2. **난이도 변환**: `상/중/하` → `hard/medium/easy`
+3. **학년 변환**: `7, 8, 9` → `중1, 중2, 중3`
+4. **SVG 이미지**: `svg_content` → `imageSvg` (null 처리)
+
+### 🛡️ 에러 처리 및 폴백
+
+**API 호출 실패 시 자동 폴백**:
+- 네트워크 오류 → 기존 mock 데이터 사용
+- 서버 오류 → 사용자에게 명확한 에러 메시지 표시
+- 데이터 파싱 오류 → 폴백 데이터로 대체
+
+**에러 메시지 예시**:
+- "서버에서 문제를 생성하는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+- "서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요."
+
+### 🧪 API 테스트 방법
+
+1. **백엔드 서버 실행 확인**:
+   ```bash
+   # localhost:7071에서 서버가 실행 중인지 확인
+   curl http://localhost:7071/api/create_by_view_rag_personalized?grade=2
+   ```
+
+2. **프론트엔드에서 테스트**:
+   - 브라우저 개발자 도구 → Network 탭
+   - 사전평가 시작 → API 요청 확인
+   - Console에서 응답 데이터 확인
+
+3. **에러 시나리오 테스트**:
+   - 백엔드 서버 중지 → 폴백 데이터 사용 확인
+   - 잘못된 응답 형식 → 에러 메시지 표시 확인
+
+### 🔧 개발자 설정
+
+**환경 변수** (선택사항):
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:7071
+```
+
+**API 함수 사용법**:
+```typescript
+import { generateQuestions } from '@/lib/api';
+
+// 문제 생성 (학년, 학기)
+const questions = await generateQuestions(2, 1); // 중2, 1학기
+```
+
+### 📊 API 응답 예시
+
+**성공 응답**:
+```json
+{
+  "success": true,
+  "generated_questions": [
+    {
+      "assessmentItemID": "A080003001",
+      "concept_name": "유한소수 및 무한소수",
+      "question_text": "다음 중 유한소수인 것은 무엇인가?",
+      "choices": [
+        "① 0.25",
+        "② 0.333...",
+        "③ 0.142857142857...",
+        "④ 0.666..."
+      ],
+      "answer": "①",
+      "explanation": "0.25는 소수점 아래 자릿수가 끝나는 유한소수입니다.",
+      "svg_content": null,
+      "metadata": {
+        "grade": 8,
+        "term": "1학기",
+        "difficulty_band": "하"
+      }
+    }
+  ],
+  "total_generated": 6,
+  "concepts_used": 3,
+  "grade_info": {
+    "korean_grade": 2,
+    "international_grade": 8,
+    "grade_description": "중학교 2학년"
+  }
+}
+```
+
+**에러 응답**:
+```json
+{
+  "success": false,
+  "message": "문제 생성에 실패했습니다.",
+  "status_code": 500
+}
+```
+
+## 🧪 테스트
+
+```bash
+# 린트 검사
+npm run lint
+```
+
+## 📦 배포
+
+### Vercel 배포
+1. GitHub 저장소 연결
+2. 자동 배포 설정
+3. 환경 변수 구성
+
+### 환경 변수
+- `PORT`: 서버 포트 (기본값: 3000)
+
+## 🤝 개발 협업
+
+### 브랜치 전략
+- `master`: 프로덕션 브랜치
+- `develop`: 개발 브랜치
+- `feature/*`: 기능별 브랜치
+
+### 커밋 컨벤션
+```
+feat: 새로운 기능 추가
+fix: 버그 수정
+docs: 문서 수정
+style: 코드 포맷팅
+refactor: 코드 리팩토링
+test: 테스트 추가/수정
+```
+
+## 📝 추가 문서 & 리소스
+
+### 📋 프로젝트 문서
+프로젝트 루트의 다음 문서들을 참고하세요:
+- `UIUX설계.md`: UI/UX 설계 가이드 및 와이어프레임
+- `Next.js+TypeScript규칙.md`: 개발 컨벤션 및 코딩 규칙
+- `프로젝트구조및플로우.md`: 상세 아키텍처 및 데이터 플로우
+- `디자인수정.md`: 디자인 변경 이력 및 개선 사항
+
+### 🎨 디자인 에셋
+**이미지 및 브랜드 리소스**
+- `/public/herosample.png`: 메인 히어로 배경 이미지
+- `/public/brandcharacter.png`: 브랜드 캐릭터 일러스트
+- `/public/favicon.ico`: 파비콘 및 앱 아이콘
+
+### 📱 기기별 테스트 가이드
+**디자이너가 확인해야 할 주요 기기들**
+- **iPhone SE** (375px): 최소 모바일 해상도
+- **iPhone 14** (390px): 표준 모바일
+- **iPad Mini** (768px): 태블릿 세로
+- **iPad Pro** (1024px): 태블릿 가로
+- **MacBook Air** (1280px): 노트북
+- **iMac** (1920px): 데스크톱
+
+### 🔍 성능 & 접근성 체크포인트
+**품질 보증을 위한 확인 사항들**
+- [ ] **로딩 속도**: 3초 이내 첫 화면 표시
+- [ ] **색상 대비**: WCAG AA 기준 4.5:1 이상
+- [ ] **터치 영역**: 최소 44px x 44px
+- [ ] **폰트 크기**: 최소 14px 이상
+- [ ] **포커스 표시**: 키보드 네비게이션 지원
+
+## 🔧 팀 협업 가이드
+
+### 👥 역할별 책임
+**디자이너**
+- UI/UX 설계 및 사용자 경험 개선
+- 브랜드 가이드라인 관리
+- 디자인 시스템 유지보수
+- 반응형 디자인 품질 검수
+
+**프론트엔드 개발자**
+- 컴포넌트 개발 및 최적화
+- 반응형 구현 및 크로스 브라우저 호환성
+- 성능 최적화 및 접근성 구현
+- API 연동 및 상태 관리
+
+**백엔드 개발자**
+- API 설계 및 구현
+- 데이터베이스 설계
+- 서버 인프라 관리
+- 보안 및 성능 최적화
+
+### 🔄 협업 워크플로
+1. **기획 단계**: 사용자 스토리 → 와이어프레임 → 디자인
+2. **개발 단계**: 컴포넌트 개발 → API 연동 → 통합 테스트
+3. **검수 단계**: 디자인 QA → 기능 테스트 → 사용자 테스트
+4. **배포 단계**: 스테이징 → 프로덕션 → 모니터링
+
+### 🛠️ 개발 도구 및 환경
+**필수 도구들**
+- **코드 에디터**: VS Code + 추천 익스텐션
+- **디자인 도구**: Figma (팀 협업용)
+- **버전 관리**: Git + GitHub
+- **패키지 매니저**: npm
+- **번들러**: Next.js (내장 Webpack)
+- **스타일링**: Tailwind CSS
+- **애니메이션**: Framer Motion
+
+## 🐛 알려진 이슈 & 개선 예정
+
+### ⚠️ 현재 알려진 이슈
+현재 크리티컬한 이슈는 없습니다. 문제 발견 시 GitHub Issues에 등록해주세요.
+
+### 🚀 향후 개선 계획
+- [ ] **PWA 지원**: 오프라인 사용 및 앱 설치
+- [ ] **다크 모드**: 사용자 설정에 따른 테마 전환
+- [ ] **다국어 지원**: 영어, 일본어 추가
+- [ ] **음성 기능**: TTS 문제 읽기, 음성 답변
+- [ ] **게임화**: 포인트, 배지, 리더보드 시스템
+
+### 📊 성능 최적화 로드맵
+- [ ] **이미지 최적화**: WebP 변환 및 압축
+- [ ] **코드 분할**: 페이지별 번들 분리
+- [ ] **캐싱 전략**: Redis 도입 및 CDN 연동
+- [ ] **SEO 개선**: 메타데이터 최적화
+
+## 📞 문의 및 피드백
+
+### 💬 소통 채널
+- **개발 관련**: GitHub Issues 또는 개발팀 슬랙
+- **디자인 피드백**: Figma 댓글 또는 디자인 팀 직접 연락
+- **긴급 이슈**: 팀 리더에게 직접 연락
+
+### 📋 피드백 템플릿
+**버그 리포트**
+```
+제목: [버그] 간단한 설명
+환경: 브라우저/기기 정보
+재현 단계:
+1.
+2.
+3.
+예상 결과:
+실제 결과:
+스크린샷: (있다면)
+```
+
+**기능 개선 제안**
+```
+제목: [개선] 간단한 설명
+현재 상황:
+개선 아이디어:
+기대 효과:
+우선순위: 높음/보통/낮음
+```
+
+---
+
+## 🎯 프로젝트 비전
+
+**"모든 중학생이 수학을 재미있게 배울 수 있는 세상"**
+
+STUDIYA는 단순한 학습 도구를 넘어, 학생들이 수학에 대한 자신감을 기를 수 있는 든든한 동반자가 되고자 합니다. 개인화된 학습과 정직한 피드백을 통해 각자의 속도로 성장할 수 있는 환경을 제공합니다.
+
+**STUDIYA Team** - 개인화 AI 수학 학습의 새로운 경험 ✨

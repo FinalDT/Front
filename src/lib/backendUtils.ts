@@ -116,8 +116,6 @@ export function transformQuizDataForBackend(frontendData: {
  */
 export async function sendQuizDataToBackend(backendData: BackendQuizData): Promise<boolean> {
   try {
-    console.log('Sending quiz data to backend:', backendData);
-
     const response = await fetch(`${BACKEND_CONFIG.BASE_URL}/api/quiz/submit`, {
       method: 'POST',
       headers: {
@@ -131,11 +129,9 @@ export async function sendQuizDataToBackend(backendData: BackendQuizData): Promi
     }
 
     const result = await response.json();
-    console.log('Backend response:', result);
 
     return true;
   } catch (error) {
-    console.error('Failed to send quiz data to backend:', error);
     // 백엔드 실패해도 프론트엔드는 계속 동작하도록
     return false;
   }
